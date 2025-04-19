@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio - Lamp Theme Toggle</title>
+  <style>
+    /* Base page styling */
+    body {
+      margin: 0;
+      background-color: white;
+      color: black;
+      font-family: sans-serif;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+    body.dark {
+      background-color: #121212;
+      color: white;
+    }
+    /* Container for the Matter.js scene and lamp */
+    #lamp-container {
+      position: fixed;
+      top: 40px;
+      right: 40px;
+      width: 200px;
+      height: 400px;
+      z-index: 1000;
+      pointer-events: none; /* canvas handles pointer events */
+    }
+    /* The Matter.js canvas */
+    #matter-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: auto;
+      z-index: 10; /* Make sure canvas is on top for interactions */
+    }
+    
+    /* Lamp base */
+    .lamp-base {
+      position: absolute;
+      width: 40px;
+      height: 20px;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      border-radius: 5px;
+      z-index: 4; /* Below the bulb and dingle but above shade */
+    }
+    
+    /* Lamp stem */
+    .lamp-stem {
+      position: absolute;
+      width: 8px;
+      height: 140px;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #444;
+      z-index: 4; /* Below the bulb and dingle but above shade */
+    }
+    
+    /* Lamp shade holder (connecting shade to stem) */
+    .lamp-shade-holder {
+      position: absolute;
+      width: 20px;
+      height: 5px;
+      bottom: 200px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #555;
+      z-index: 5; /* Above shade but below other lamp parts */
+      border-radius: 3px;
+    }
+    
+    /* Lamp shade: proper cylinder */
+    .lamp-shade {
+      position: absolute;
+      width: 120px;  
+      height: 80px;   /* Shorter cylinder */
+      bottom: 205px;  /* Position above the holder */
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 4;
+      overflow: visible;
+    }
+    
+    /* Cylinder sides */
+    .lamp-shade-sides {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #E6D7C0;  /* Light beige/cream color */
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      z-index: 4; /* Higher than the top/bottom rings to be in front */
+    }
+    
+    /* Top and bottom rings of the cylinder */
+    .lamp-shade-top, .lamp-shade-bottom {
+      position: absolute;
+      width: 100%;
+      height: 12px;
+      left: 0;
+      background-color: #D6C7B0; /* Slightly darker than sides */
+      border: 1px solid #ccc;
+    }
+    
+    .lamp-shade-top {
+      top: -6px;
+      border-radius: 50%;
+      transform: perspective(100px) rotateX(60deg);
+      z-index: 1; /* Behind other elements */
+    }
+    
+    .lamp-shade-bottom {
+      bottom: -6px;
+      border-radius: 50%;
+      transform: perspective(100px) rotateX(-60deg);
+      z-index: 1; /* Behind other elements */
+    }
+    
+    /* Light bulb under the shade */
+    .lamp-bulb {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      bottom: 185px; /* Position inside the shade */
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(circle at center, #fff, #ffd54f);
+      border-radius: 50%;
+      z-index: 7; /* Above everything, including the lamp stand */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      box-shadow: 0 0 10px 5px rgba(255,213,79,0.1);
+    }
+    
+    /* Light effect - top opening */
+    .lamp-light-top {
+      position: absolute;
+      width: 90px;
+      height: 120px;
+      bottom: 285px; /* Above the shade */
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at bottom, rgba(255,213,79,0.4), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 2; /* Below the shade sides but above the rings */
+    }
+    
+    /* Light effect - bottom opening */
+    .lamp-light-bottom {
+      position: absolute;
+      width: 120px;
+      height: 40px;
+      bottom: 165px; /* Below the shade */
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at top, rgba(255,213,79,0.6), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 2; /* Below the shade sides but above the rings */
+    }
+    
+    /* Ambient glow around the shade when lit */
+    .lamp-ambient {
+      position: absolute;
+      width: 150px;
+      height: 100px;
+      bottom: 195px; /* Around the shade */
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(255,213,79,0.1), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 0; /* At the very back */
+    }
+    
+    /* Show light when in dark mode */
+    body.dark .lamp-bulb {
+      opacity: 1;
+    }
+    
+    body.dark .lamp-light-top,
+    body.dark .lamp-light-bottom,
+    body.dark .lamp-ambient {
+      opacity: 1;
+    }
+    
+    /* Switch styles when in dark mode */
+    body.dark .lamp-shade-sides {
+      background-color: #E6D7C0;
+      box-shadow: 0 0 15px 5px rgba(255,213,79,0.15);
+    }
+    
+    /* Content styling */
+    main {
+      padding: 100px 20px;
+      max-width: 700px;
+      margin: 200px auto 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Lamp container with canvas and complete lamp structure -->
+  <div id="lamp-container">
+    <canvas id="matter-canvas" width="200" height="400"></canvas>
+    <!-- Complete lamp structure -->
+    <div class="lamp-base"></div>
+    <div class="lamp-stem"></div>
+    <div class="lamp-shade-holder"></div>
+    <div class="lamp-bulb"></div>
+    <div class="lamp-shade">
+      <div class="lamp-shade-sides"></div>
+      <div class="lamp-shade-top"></div>
+      <div class="lamp-shade-bottom"></div>
+    </div>
+    <div class="lamp-light-top"></div>
+    <div class="lamp-light-bottom"></div>
+    <div class="lamp-ambient"></div>
+  </div>
+  <main>
+    <h1>My Portfolio</h1>
+    <p>Pull the wooden dingle to toggle the lamp and switch between light and dark mode. The lamp features a cylindrical shade with a light bulb underneath.</p>
+  </main>
+  <!-- Matter.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script>
+    /**************************************************
+     * Matter.js Setup
+     **************************************************/
+    const { Engine, Render, Runner, Bodies, Body, Constraint, Mouse, MouseConstraint, Events, World } = Matter;
+
+    // Create engine with natural gravity.
+    const engine = Engine.create();
+    engine.world.gravity.y = 1;
+
+    // Create the renderer.
+    const canvas = document.getElementById('matter-canvas');
+    const render = Render.create({
+      canvas: canvas,
+      engine: engine,
+      options: {
+        width: 200,
+        height: 400,
+        wireframes: false,
+        background: 'transparent',
+        pixelRatio: window.devicePixelRatio
+      }
+    });
+
+    /**************************************************
+     * Create Boundaries to Keep the Rope Within the Scene
+     **************************************************/
+    function createBoundary(x, y, w, h) {
+      return Bodies.rectangle(x, y, w, h, {
+        isStatic: true,
+        render: { fillStyle: 'transparent' }
+      });
+    }
+    const wallThickness = 50;
+    const walls = [
+      createBoundary(100, -wallThickness/2, 200, wallThickness),    // top
+      createBoundary(100, 400 + wallThickness/2, 200, wallThickness), // bottom
+      createBoundary(-wallThickness/2, 200, wallThickness, 400),       // left
+      createBoundary(200 + wallThickness/2, 200, wallThickness, 400)   // right
+    ];
+    World.add(engine.world, walls);
+
+    /**************************************************
+     * Create the Rope and Anchor
+     **************************************************/
+    // Anchor point positioned where the pull cord would connect to the lamp
+    const anchor = { x: 100, y: 180 };
+    // Create the rope pull bob (a small cylinder for the dingle/pull).
+    const ropePull = Bodies.circle(anchor.x, anchor.y + 30, 15, {
+      restitution: 0.5,
+      frictionAir: 0.03,
+      density: 0.0015,
+      render: { 
+        fillStyle: '#8D6E63',  // Lighter wood color for better visibility
+        strokeStyle: '#5D4037',
+        lineWidth: 2,
+        // Make it stand out more
+        opacity: 1
+      }
+    });
+    // Constrain the rope pull to the anchor with a set length.
+    const ropeConstraint = Constraint.create({
+      pointA: anchor,
+      bodyB: ropePull,
+      pointB: { x: 0, y: 0 },
+      length: 40,  // Shorter pull cord
+      stiffness: 0.8,
+      render: { 
+        strokeStyle: '#8D6E63',  // Rope-like color
+        lineWidth: 3 
+      }
+    });
+    World.add(engine.world, [ropePull, ropeConstraint]);
+
+    /**************************************************
+     * Add Mouse Interaction
+     **************************************************/
+    // Use the canvas for mouse controls.
+    const mouse = Mouse.create(canvas);
+    
+    // Ensure mouse coordinates are properly scaled
+    mouse.pixelRatio = render.options.pixelRatio;
+    
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: { visible: false }
+      }
+    });
+    
+    World.add(engine.world, mouseConstraint);
+
+    // Track when pull is being dragged
+    let isDraggingPull = false;
+    
+    Events.on(mouseConstraint, 'startdrag', (event) => {
+      if (event.body === ropePull) {
+        isDraggingPull = true;
+      }
+    });
+    
+    // When dragging ends, if the rope is pulled farther than a threshold, toggle the theme.
+    Events.on(mouseConstraint, 'enddrag', (event) => {
+      if (event.body === ropePull && isDraggingPull) {
+        const dx = ropePull.position.x - anchor.x;
+        const dy = ropePull.position.y - anchor.y;
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        const threshold = 25; // More forgiving threshold
+        
+        if (distance > threshold) {
+          // Toggle dark mode
+          document.body.classList.toggle('dark');
+          const mode = document.body.classList.contains('dark') ? 'dark' : 'light';
+          localStorage.setItem('theme', mode);
+          
+          // Add a small animation to the lamp bulb when toggling
+          const lampBulb = document.querySelector('.lamp-bulb');
+          lampBulb.style.transition = 'transform 0.1s ease';
+          lampBulb.style.transform = 'scale(1.2)';
+          
+          setTimeout(() => {
+            lampBulb.style.transform = '';
+          }, 100);
+        }
+        
+        isDraggingPull = false;
+      }
+    });
+    
+    // Add a click handler as a backup to ensure interaction works
+    canvas.addEventListener('click', (event) => {
+      const bounds = canvas.getBoundingClientRect();
+      const clickX = event.clientX - bounds.left;
+      const clickY = event.clientY - bounds.top;
+      
+      // Check if click is close to the dingle
+      const dx = clickX - ropePull.position.x;
+      const dy = clickY - ropePull.position.y;
+      const distance = Math.sqrt(dx*dx + dy*dy);
+      
+      if (distance < 20) {
+        document.body.classList.toggle('dark');
+        const mode = document.body.classList.contains('dark') ? 'dark' : 'light';
+        localStorage.setItem('theme', mode);
+      }
+    });
+
+    // If mouse is released outside the canvas, force end the drag.
+    document.addEventListener('mouseup', () => {
+      if (mouseConstraint.constraint.bodyB) {
+        mouseConstraint.constraint.bodyB = null;
+        mouseConstraint.constraint.pointB = null;
+      }
+    });
+
+    /**************************************************
+     * Run the Engine and Renderer
+     **************************************************/
+    const runner = Runner.create();
+    Runner.run(runner, engine);
+    Render.run(render);
+
+    // Load saved theme on startup.
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+    }
+  </script>
+</body>
+</html>
