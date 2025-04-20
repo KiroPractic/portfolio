@@ -639,13 +639,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const carouselDots = document.getElementById('carousel-dots');
     const popupTitle = document.getElementById('popup-title');
     const popupDesc = document.getElementById('popup-description');
-    const albumLink = document.getElementById('album-link');
     
     // Variables for carousel
     let currentImageIndex = 0;
     let currentImages = [];
     
     function showCountryPopup(country) {
+      // Disable scrolling when modal is open
+      document.body.style.overflow = 'hidden';
+      
       // Reset carousel
       currentImageIndex = 0;
       currentImages = country.images || []; // Default to empty array if no images
@@ -653,6 +655,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Clear previous carousel content
       carouselContainer.innerHTML = '';
       carouselDots.innerHTML = '';
+      
+      // Show the modal and backdrop with animation
+      popup.classList.add('show');
+      backdrop.classList.add('show');
       
       // Add images to carousel
       if (currentImages.length > 0) {
@@ -711,22 +717,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       document.getElementById('popup-description').innerHTML = country.description;
       
-      // Update album link text based on country type
-      if (country.type === 'home') {
-        albumLink.textContent = 'View Home Country Photos';
-        albumLink.style.backgroundColor = isLightMode ? '#b91c1c' : '#f87171';
-      } else if (country.code === 'GBR') {
-        albumLink.textContent = 'View UK Study Memories';
-        albumLink.style.backgroundColor = isLightMode ? '#4682B4' : '#6495ED';
-      } else {
-        albumLink.textContent = 'View Photo Album';
-        albumLink.style.backgroundColor = isLightMode ? '#4682B4' : '#6495ED';
-      }
-      
-      albumLink.href = country.albumLink;
-      
-      backdrop.style.display = 'block';
-      popup.style.display = 'block';
+      // Removed album link functionality
     }
     
     // Function to show a specific image in the carousel
@@ -761,9 +752,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     closeBtn.addEventListener('click', closePopup);
     backdrop.addEventListener('click', closePopup);
     
+    // Add swipe functionality for mobile users
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    carouselContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    
+    carouselContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+    
+    function handleSwipe() {
+      // Detect swipe direction (minimum 50px movement to count as a swipe)
+      if (touchEndX < touchStartX - 50) {
+        // Swiped left - show next image
+        showImage(currentImageIndex + 1);
+      }
+      if (touchEndX > touchStartX + 50) {
+        // Swiped right - show previous image
+        showImage(currentImageIndex - 1);
+      }
+    }
+    
     function closePopup() {
-      popup.style.display = 'none';
-      backdrop.style.display = 'none';
+      // Start the closing animation
+      popup.classList.remove('show');
+      backdrop.classList.remove('show');
+      
+      // Wait for the animation to complete before completely hiding and re-enabling scroll
+      setTimeout(() => {
+        document.body.style.overflow = 'auto'; // Re-enable scrolling
+      }, 400); // Match the CSS transition duration (0.4s)
     }
     
     // Fetch country data

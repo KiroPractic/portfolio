@@ -61,6 +61,12 @@
       height: 250px;
       position: relative;
       overflow: hidden;
+      touch-action: pan-y; /* Allow vertical scrolling but handle horizontal swipes in JS */
+      cursor: grab; /* Show grab cursor to indicate swipeable content */
+    }
+    
+    .carousel-container:active {
+      cursor: grabbing; /* Change cursor while swiping */
     }
     
     .carousel-container img {
@@ -90,9 +96,44 @@
       width: 40px;
       height: 40px;
       font-size: 20px;
+      line-height: 0; /* Fix vertical centering */
+      padding: 0; /* Remove any padding */
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       z-index: 2;
-      transition: background 0.3s;
+      transition: background 0.3s, opacity 0.3s;
+    }
+    
+    /* Add responsive design for carousel buttons */
+    @media (max-width: 768px) {
+      .carousel-button {
+        opacity: 0.7; /* Make buttons more subtle on mobile */
+        width: 36px; /* Slightly smaller on mobile */
+        height: 36px;
+      }
+      
+      /* Add hint about swipe functionality for first-time users */
+      .carousel-container::after {
+        content: "Swipe to navigate";
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        opacity: 0.7;
+        pointer-events: none; /* Don't interfere with touch events */
+        animation: fadeOut 3s forwards 1s; /* Show briefly then fade out */
+      }
+      
+      @keyframes fadeOut {
+        to { opacity: 0; }
+      }
     }
     
     .carousel-button:hover {
@@ -238,7 +279,7 @@
       width: 90%; /* Almost the whole width */
       height: 15px; /* Thin, 2D rectangle */
       background-color: #1a120c; /* Dark wood color */
-      z-index: 800; /* Higher z-index to ensure it's above other elements */
+      z-index: 2100; /* Higher z-index to ensure it's above modal */
       /* Wood grain texture */
       background-image: 
         repeating-linear-gradient(
@@ -1055,29 +1096,44 @@
     
     /* Country popup styling */
     .country-popup {
-      display: none;
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
       width: 90%;
       max-width: 400px;
       background-color: white;
       border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      z-index: 2000;
+      z-index: 2050;
       overflow: hidden;
-      transition: all var(--transition-duration) ease;
       opacity: 0;
       transform: translate(-50%, -45%);
-      animation: popup-appear 0.4s ease forwards;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
     
-    @keyframes popup-appear {
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-      }
+    .country-popup.show {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      pointer-events: all;
+    }
+    
+    .backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    
+    .backdrop.show {
+      opacity: 1;
+      pointer-events: all;
     }
     
     body.dark .country-popup {
@@ -1114,36 +1170,7 @@
       color: #aaa;
     }
     
-    .album-link {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #4682B4; /* SteelBlue - matching visited countries */
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(70, 130, 180, 0.3);
-    }
-    
-    .album-link:hover {
-      background-color: #5590c2;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(70, 130, 180, 0.4);
-    }
-    
-    body.dark .album-link {
-      background-color: #6495ED; /* CornflowerBlue - matching dark mode visited countries */
-      box-shadow: 0 2px 8px rgba(100, 149, 237, 0.3);
-    }
-    
-    body.dark .album-link:hover {
-      background-color: #75a6ff;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(100, 149, 237, 0.4);
-    }
+    /* Removed album link styles */
     
     .close-popup {
       position: absolute;
@@ -1151,28 +1178,26 @@
       right: 10px;
       width: 30px;
       height: 30px;
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.5);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       color: white;
-      font-size: 18px;
+      font-size: 14px; /* Smaller font size for better alignment */
+      font-weight: normal;
+      line-height: 1; /* Better for cross symbol */
       border: none;
-      z-index: 1;
+      z-index: 10;
+      transition: background 0.3s;
+      padding: 0; /* Remove any padding */
     }
     
-    .backdrop {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1999;
+    .close-popup:hover {
+      background-color: rgba(0, 0, 0, 0.7);
     }
+    
     
     @media (max-width: 768px) {
       .map-container {
@@ -1244,8 +1269,6 @@
     <!-- Popup for country details -->
     <div class="backdrop" id="backdrop"></div>
     <div class="country-popup" id="country-popup">
-      <button class="close-popup" id="close-popup">×</button>
-      
       <!-- Image carousel -->
       <div class="image-carousel">
         <div class="carousel-container" id="carousel-container">
@@ -1258,10 +1281,11 @@
         </div>
       </div>
       
+      <button class="close-popup" id="close-popup">&#10005;</button>
+      
       <div class="popup-content">
         <h3 class="popup-title" id="popup-title"></h3>
         <p class="popup-description" id="popup-description"></p>
-        <a href="#" class="album-link" id="album-link" target="_blank">View Photo Album</a>
       </div>
     </div>
   </div>
