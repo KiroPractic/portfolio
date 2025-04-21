@@ -581,33 +581,39 @@
       /* No position changes */
     }
     
-    /* Direct text styling */
+    /* Header content with flexbox */
+    .header-content {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .name-container {
+      width: 65%;
+      padding-top: 80px;
+      margin-right: 8%;
+    }
+    
     .name {
-      position: absolute;
-      top: 80px; /* Positioned near the top */
-      left: 32%; /* More to the right to avoid overlapping lamp */
       font-size: 5rem;
       font-weight: 700;
       margin: 0;
       line-height: 1.1;
       letter-spacing: -0.02em;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow for better readability */
+      text-shadow: 0 1px 3px rgba(0,0,0,0.1);
       text-align: left;
-      z-index: 1;
       background: none;
       border: none;
       padding: 0;
     }
     
     .subtitle {
-      position: absolute;
-      top: 180px; /* Below the name */
-      left: 32%; /* Aligned with name */
       font-size: 1.5rem;
-      margin: 0;
+      margin: 0.5rem 0 0 0;
       color: #666;
       text-align: left;
-      z-index: 1;
       background: none;
       border: none;
       padding: 0;
@@ -649,6 +655,20 @@
         width: calc(100% - 240px); /* Calculate remaining width */
       }
       
+      .name-container {
+        width: 60%;
+        margin-right: 5%;
+        padding-top: 70px;
+      }
+      
+      .name {
+        font-size: 3.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1.25rem;
+      }
+      
       .hero h1 {
         font-size: 3.5rem;
       }
@@ -659,7 +679,7 @@
     }
     
     @media (max-width: 768px) {
-      /* Simple mobile layout with positioned elements */
+      /* Simple mobile layout with flexbox */
       .container {
         height: auto;
         position: relative;
@@ -667,23 +687,27 @@
         max-width: 100%;
       }
       
-      /* Content at top */
+      /* Center content with flexbox */
+      .header-content {
+        justify-content: center;
+      }
+      
+      .name-container {
+        width: 100%;
+        padding-top: 30px;
+        margin-right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
       .name, .subtitle {
-        position: absolute;
-        top: 30px;
-        left: 0;
-        width: auto;
         text-align: center;
+        width: auto;
         background: none;
         border: none;
         box-shadow: none;
         padding: 0;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      
-      .subtitle {
-        top: 80px;
       }
       
       .text-light-effect {
@@ -777,12 +801,17 @@
     }
     
     @media (max-width: 480px) {
+      .name-container {
+        padding-top: 20px;
+      }
+      
       .name {
         font-size: 2.2rem;
       }
       
       .subtitle {
         font-size: 1rem;
+        margin-top: 0.3rem;
       }
       
       /* Position lamp under text */
@@ -808,41 +837,6 @@
       color: #b5a99e;
     }
     
-    /* Light effect on text */
-    .text-light-effect {
-      position: absolute;
-      width: 100%;
-      height: 100px;
-      top: 80px;
-      left: 32%;
-      width: 65%;
-      background: radial-gradient(circle at left center, rgba(255,215,79,0.25) 0%, rgba(255,215,79,0.05) 40%, transparent 70%);
-      mix-blend-mode: soft-light;
-      opacity: 0;
-      transition: opacity var(--transition-duration) ease;
-      pointer-events: none;
-      z-index: 0;
-    }
-    
-    /* Adjust light effect for mobile */
-    @media (max-width: 768px) {
-      .text-light-effect {
-        top: 20px;
-        left: 0;
-        width: 100%;
-        height: 120px;
-        background: radial-gradient(circle at center bottom, rgba(255,215,79,0.25) 0%, rgba(255,215,79,0.05) 40%, transparent 70%);
-      }
-      
-      /* For mobile, light should appear to come from below (from lamp to text) */
-      body.dark .text-light-effect {
-        background: radial-gradient(circle at center bottom, rgba(255,215,79,0.25) 0%, rgba(255,215,79,0.05) 40%, transparent 70%);
-      }
-    }
-    
-    body.dark .text-light-effect {
-      opacity: 1;
-    }
     
     /* No additional light effect for the container */
     
@@ -1231,10 +1225,13 @@
 </head>
 <body class="dark">
   <div class="container">
-    <!-- Content without container -->
-    <h1 class="name">Franko Kirinčić</h1>
-    <p class="subtitle">.NET Developer, and some other stuff</p>
-    <div class="text-light-effect"></div>
+    <!-- Header content in a flex container -->
+    <div class="header-content">
+      <div class="name-container">
+        <h1 class="name">Franko Kirinčić</h1>
+        <p class="subtitle">.NET developer, and some other stuff</p>
+      </div>
+    </div>
     
     <!-- Lamp container with canvas and complete lamp structure (middle on mobile) -->
     <div id="lamp-container">
