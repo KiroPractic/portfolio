@@ -91,6 +91,23 @@ World.add(engine.world, mouseConstraint);
 
 // Track when pull is being dragged
 let isDraggingPull = false;
+// Flag for when dongle is manually clicked
+let dongleSelected = false;
+// Flag to track if our custom constraint is active
+let customConstraintActive = false;
+// Store the mouse position when dongle is clicked
+let customMousePosition = { x: 0, y: 0 };
+
+// Create a custom constraint for our manual dongle handling
+const customConstraint = Constraint.create({
+  pointA: customMousePosition,
+  bodyB: ropePull,
+  pointB: { x: 0, y: 0 },
+  stiffness: 0.2,
+  length: 0,
+  render: { visible: false }
+});
+// Don't add it to the world yet - we'll add it only when needed
 
 Events.on(mouseConstraint, 'startdrag', (event) => {
   if (event.body === ropePull) {
@@ -98,46 +115,139 @@ Events.on(mouseConstraint, 'startdrag', (event) => {
   }
 });
 
-// When dragging ends, if the rope is pulled farther than a threshold, toggle the theme.
-Events.on(mouseConstraint, 'enddrag', (event) => {
-  if (event.body === ropePull && isDraggingPull) {
-    const dx = ropePull.position.x - anchor.x;
-    const dy = ropePull.position.y - anchor.y;
-    const distance = Math.sqrt(dx*dx + dy*dy);
-    const threshold = 8; // Smaller threshold for more precise control
-    
-    if (distance > threshold) {
-      // Toggle dark mode
-      document.body.classList.toggle('dark');
-      const mode = document.body.classList.contains('dark') ? 'dark' : 'light';
-      localStorage.setItem('theme', mode);
-    }
-    
-    isDraggingPull = false;
-  }
-});
 
-// Add a click handler as a backup to ensure interaction works
-canvas.addEventListener('click', (event) => {
-  const bounds = canvas.getBoundingClientRect();
-  const clickX = event.clientX - bounds.left;
-  const clickY = event.clientY - bounds.top;
+
+// Function to check distance and toggle theme if needed
+function checkToggleTheme() {
+  const dx = ropePull.position.x - anchor.x;
+  const dy = ropePull.position.y - anchor.y;
+  const distance = Math.sqrt(dx*dx + dy*dy);
+  const threshold = 35; // Smaller threshold for more precise control
   
-  // Check if click is close to the dingle
+  console.log('Release distance:', distance);
+  
+  if (distance > threshold) {
+    // Toggle dark mode
+    document.body.classList.toggle('dark');
+    const mode = document.body.classList.contains('dark') ? 'dark' : 'light';
+    localStorage.setItem('theme', mode);
+    return true;
+  }
+  return false;
+}
+
+// Main interaction handler for both mouse and touch
+function handleInteraction(eventX, eventY) {
+  if (typeof eventX === 'undefined' || typeof eventY === 'undefined') return;
+  
+  const bounds = canvas.getBoundingClientRect();
+  const clickX = eventX - bounds.left;
+  const clickY = eventY - bounds.top;
+  
+  // Check if click/touch is close to the dongle
   const dx = clickX - ropePull.position.x;
   const dy = clickY - ropePull.position.y;
   const distance = Math.sqrt(dx*dx + dy*dy);
   
-  if (distance < 20) {
-    document.body.classList.toggle('dark');
-    const mode = document.body.classList.contains('dark') ? 'dark' : 'light';
-    localStorage.setItem('theme', mode);
+  console.log('Click/Touch distance:', distance);
+  
+  if (distance < 40) {
+    // Store the mouse position for our custom constraint
+    customMousePosition.x = clickX;
+    customMousePosition.y = clickY;
+    
+    // Setup custom constraint
+    if (!customConstraintActive) {
+      // Add our custom constraint to the world
+      World.add(engine.world, customConstraint);
+      customConstraintActive = true;
+    }
+    
+    // Mark dongle as manually selected
+    dongleSelected = true;
+  }
+}
+
+// Update the custom constraint point when mouse/touch moves
+function updateCustomConstraint(eventX, eventY) {
+  if (!customConstraintActive || !dongleSelected) return;
+  
+  const bounds = canvas.getBoundingClientRect();
+  customMousePosition.x = eventX - bounds.left;
+  customMousePosition.y = eventY - bounds.top;
+}
+
+// Release the custom constraint
+function releaseCustomConstraint() {
+  if (customConstraintActive) {
+    // Check if we should toggle the theme
+    checkToggleTheme();
+    
+    // Remove custom constraint from world
+    World.remove(engine.world, customConstraint);
+    customConstraintActive = false;
+    dongleSelected = false;
+    isDraggingPull = false;
+  }
+}
+
+// Mouse event handlers
+canvas.addEventListener('mousedown', (event) => {
+  handleInteraction(event.clientX, event.clientY);
+});
+
+document.addEventListener('mousemove', (event) => {
+  updateCustomConstraint(event.clientX, event.clientY);
+});
+
+document.addEventListener('mouseup', () => {
+  releaseCustomConstraint();
+  
+  // Also ensure the built-in constraint is released
+  if (mouseConstraint.constraint.bodyB) {
+    mouseConstraint.constraint.bodyB = null;
+    mouseConstraint.constraint.pointB = null;
   }
 });
 
-// If mouse is released outside the canvas, force end the drag.
-document.addEventListener('mouseup', () => {
+// Touch event handlers
+canvas.addEventListener('touchstart', (event) => {
+  if (event.touches && event.touches[0]) {
+    handleInteraction(event.touches[0].clientX, event.touches[0].clientY);
+    
+    // Prevent default to avoid scrolling if we've selected the dongle
+    if (dongleSelected && event.cancelable) {
+      event.preventDefault();
+    }
+  }
+}, { passive: false });
+
+document.addEventListener('touchmove', (event) => {
+  if (event.touches && event.touches[0]) {
+    updateCustomConstraint(event.touches[0].clientX, event.touches[0].clientY);
+    
+    // Prevent default to avoid scrolling if we've selected the dongle
+    if (dongleSelected && event.cancelable) {
+      event.preventDefault();
+    }
+  }
+}, { passive: false });
+
+document.addEventListener('touchend', () => {
+  releaseCustomConstraint();
+  
+  // Also ensure the built-in constraint is released
   if (mouseConstraint.constraint.bodyB) {
+    mouseConstraint.constraint.bodyB = null;
+    mouseConstraint.constraint.pointB = null;
+  }
+});
+
+// Disable the built-in MouseConstraint for ropePull to avoid interference
+Events.on(mouseConstraint, 'beforeupdate', () => {
+  // If our custom handling is active, prevent the built-in constraint from taking over
+  if (customConstraintActive && mouseConstraint.body === ropePull) {
+    mouseConstraint.body = null;
     mouseConstraint.constraint.bodyB = null;
     mouseConstraint.constraint.pointB = null;
   }
