@@ -719,11 +719,11 @@
         height: 120px;
       }
       
-      /* Lamp in middle with absolute position */
+      /* Lamp on left side of the screen */
       #lamp-container {
         position: absolute;
         top: 150px;
-        left: 50%;
+        left: 30%;
         transform: translateX(-50%);
         width: 200px;
         height: 200px;
@@ -738,11 +738,11 @@
         pointer-events: auto;
       }
       
-      /* Table directly under the lamp */
+      /* Table spanning across for both lamp and laptop */
       .table {
         position: absolute;
         top: 350px;
-        width: 320px;
+        width: 90%; /* Wider table to fit both lamp and laptop */
         left: 50%;
         transform: translateX(-50%);
         margin: 0;
@@ -815,22 +815,22 @@
         margin-top: 0.3rem;
       }
       
-      /* Position lamp under text */
+      /* Position lamp on left side */
       #lamp-container {
         position: absolute;
         top: 120px;
-        left: 50%;
+        left: 20%; /* Move to the left side */
         transform: translateX(-50%);
         margin: 0;
       }
       
-      /* Position table under lamp */
+      /* Position table spanning across screen */
       .table {
         position: absolute;
         top: 320px;
         left: 50%;
         transform: translateX(-50%);
-        width: 280px;
+        width: 95%; /* Wide enough for both lamp and laptop */
       }
     }
     
@@ -1353,6 +1353,7 @@
   </footer>
 
   <script src="lamp.js"></script>
+  <script src="laptop.js"></script>
   <script src="globe.js"></script>
   <script src="timeline.js"></script>
   <script>
