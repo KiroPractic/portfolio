@@ -43,17 +43,17 @@ World.add(engine.world, walls);
  * Create the Rope and Anchor
  **************************************************/
 // Anchor point positioned where the pull cord would connect to the lamp
-const anchor = { x: 100, y: 80 }; // Lower positioning 
+const anchor = { x: 75, y: 80 }; // Lower positioning, halfway to the left
 // Create the rope pull bob (a small cylinder for the dingle/pull).
-const ropePull = Bodies.circle(anchor.x, anchor.y + 25, 8, { // Position it more expanded by default
-  restitution: 0.4,
-  frictionAir: 0.03, // Less air friction for more natural movement
-  density: 0.0015, // Moderate density
+const ropePull = Bodies.circle(anchor.x, anchor.y + 25, 6, { // Smaller metallic ball (reduced from 8 to 6)
+  restitution: 0.2, // Less bounce for a more stable string
+  frictionAir: 0.03, // More air friction for less swinging
+  density: 0.015, // Slightly higher density for more stability
   render: { 
-    fillStyle: '#6D4C41',  // Darker, more subtle color
-    strokeStyle: '#5D4037',
-    lineWidth: 1, // Thinner outline
-    opacity: 0.9
+    fillStyle: '#A9A9A9',  // Silver/metallic gray
+    strokeStyle: '#D3D3D3', // Light gray highlight for metallic effect
+    lineWidth: 1, // Thin outline
+    opacity: 1.0  // Full opacity for metallic look
   }
 });
 // Constrain the rope pull to the anchor with a set length.
@@ -62,10 +62,11 @@ const ropeConstraint = Constraint.create({
   bodyB: ropePull,
   pointB: { x: 0, y: 0 },
   length: 25,  // Longer cord to allow more expanded position
-  stiffness: 0.8,
+  stiffness: 1.0, // Maximum stiffness for a straight line
   render: { 
-    strokeStyle: '#6D4C41',  // Darker wood color
-    lineWidth: 1 // Thinner and more subtle
+    strokeStyle: '#444444',  // Dark gray string
+    lineWidth: 1, // Thin line
+    type: 'line' // Force straight line rendering
   }
 });
 World.add(engine.world, [ropePull, ropeConstraint]);
