@@ -1100,7 +1100,7 @@
       background-color: white;
       border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      z-index: 2050;
+      z-index: 2150; /* Increased z-index */
       overflow-y: auto; /* Change from hidden to auto for vertical scrolling */
       opacity: 0;
       transform: translate(-50%, -45%);
@@ -1121,7 +1121,7 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1999;
+      z-index: 2149; /* Increased z-index (below popup) */
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s ease;
@@ -1264,29 +1264,6 @@
   <div class="map-container">
     <h2 class="map-title">My Life On The Globe</h2>
     <div id="globe-container"></div>
-    
-    <!-- Popup for country details -->
-    <div class="backdrop" id="backdrop"></div>
-    <div class="country-popup" id="country-popup">
-      <!-- Image carousel -->
-      <div class="image-carousel">
-        <div class="carousel-container" id="carousel-container">
-          <!-- Images will be dynamically added here -->
-        </div>
-        <button class="carousel-button prev" id="carousel-prev">❮</button>
-        <button class="carousel-button next" id="carousel-next">❯</button>
-        <div class="carousel-dots" id="carousel-dots">
-          <!-- Dots will be dynamically added here -->
-        </div>
-      </div>
-      
-      <button class="close-popup" id="close-popup">&#10005;</button>
-      
-      <div class="popup-content">
-        <h3 class="popup-title" id="popup-title"></h3>
-        <p class="popup-description" id="popup-description"></p>
-      </div>
-    </div>
   </div>
   
   <!-- Timeline section -->
@@ -1352,6 +1329,27 @@
     </div>
     <p class="copyright">© <span id="current-year"></span> Franko Kirinčić</p>
   </footer>
+
+  <!-- Popup for country details (Moved outside map-container) -->
+  <div class="backdrop" id="backdrop"></div>
+  <div class="country-popup" id="country-popup">
+    <!-- Image carousel -->
+    <div class="image-carousel">
+      <div class="carousel-container" id="carousel-container">
+        <!-- Images will be dynamically added here -->
+      </div>
+      <button class="carousel-button prev" id="carousel-prev">❮</button>
+      <button class="carousel-button next" id="carousel-next">❯</button>
+      <div class="carousel-dots" id="carousel-dots">
+        <!-- Dots will be dynamically added here -->
+      </div>
+    </div>
+    <button class="close-popup" id="close-popup">&#10005;</button>
+    <div class="popup-content">
+      <h3 class="popup-title" id="popup-title"></h3>
+      <p class="popup-description" id="popup-description"></p>
+    </div>
+  </div>
 
   <script src="lamp.js"></script>
   <script src="laptop.js"></script>

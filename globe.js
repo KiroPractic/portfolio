@@ -261,11 +261,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     
     // Initialize the globe
-    const globeElement = document.getElementById('globe-container');
+    // const globeElement = document.getElementById('globe-container'); // Define later
     let isLightMode = !document.body.classList.contains('dark'); // Will default to false (dark mode)
     
-    // Fetch countries data and initialize globe
+    // Fetch countries data
     const countries = await fetchCountries();
+    
+    // Get the globe container element *after* potential DOM changes and fetches
+    const globeElement = document.getElementById('globe-container');
+    
+    // Check if the globe container exists before initializing
+    if (!globeElement) {
+      console.error('Globe container element #globe-container not found!');
+      return; // Stop execution if container is missing
+    }
     
     // Create a clean new globe instance
     const myGlobe = Globe()
