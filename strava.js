@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiUrl = '/api/strava';
 
     if (!carouselElement || !loadingMessage || !errorMessage || !activitiesList) {
-        console.error('Strava Carousel section elements not found.');
         if (errorMessage) errorMessage.textContent = 'Error: Could not find necessary HTML elements for Strava section.';
         if (errorMessage) errorMessage.style.display = 'block';
         if (loadingMessage) loadingMessage.style.display = 'none';
@@ -50,9 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            console.log('Entered .then block with data'); // New log here
-            console.log('API Response Data:', data);
-
             if (data.error) {
                  throw new Error(data.error);
             }
@@ -68,10 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             activitiesList.innerHTML = ''; // Clear list before populating
 
-            console.log(`Processing ${data.length} activities...`); // Log before loop (use data.length)
-
             data.forEach((activity, index) => { // Iterate over data directly
-                console.log(`Processing activity ${index + 1}: ${activity.name}`); // Log start of each activity
                 try {
                     // Create the list item (cell) for Flickity
                     const cellItem = document.createElement('li');
@@ -153,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Add background image and class if photo exists
                     if (photoUrl) {
-                        console.log(`Applying background image for activity ${activity.id}: ${photoUrl}`);
                         cardDiv.style.backgroundImage = `url('${photoUrl}')`;
                         cardDiv.classList.add('has-background-image');
                     }
@@ -178,21 +170,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     cardDiv.innerHTML = cardHTML; // Set content for the card div
                     cellItem.appendChild(cardDiv); // Append card div to the cell list item
                     activitiesList.appendChild(cellItem); // Append the cell list item to the UL
-                    console.log(`Successfully processed activity ${index + 1}`); // Log successful processing
 
                 } catch (loopError) {
-                    console.error(`Error processing activity ${index + 1} (${activity.name}):`, loopError); // Log error during loop
                     // Optionally, decide if you want to stop or continue processing other activities
                     // For now, we log and continue
                 }
             });
 
-            console.log('Finished processing activities.'); // Log after loop
-
             // Initialize Flickity only if activities were found and Flickity is available
-            console.log('Checking if Flickity is available...');
             if (typeof Flickity !== 'undefined') {
-                console.log('Flickity is available. Attempting to initialize...');
                 try {
                     const flkty = new Flickity(carouselElement, {
                         cellSelector: '.strava-activity-cell',
@@ -203,24 +189,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         prevNextButtons: false // Add this line to hide arrows
                         // Add other options here as needed
                     });
-                    console.log('Flickity initialized successfully.');
 
                     // Give the browser a moment to render and then resize Flickity
                     setTimeout(() => {
                         flkty.resize();
-                        console.log('Flickity resized.');
                     }, 100); // 100ms delay, can be adjusted
 
                     carouselElement.style.display = 'block'; // Show the carousel container now
                     errorMessage.style.display = 'none'; // Hide error message if successful
                 } catch (flktyError) {
-                    console.error('Error initializing Flickity:', flktyError);
                     errorMessage.textContent = 'Error initializing activity carousel: ' + flktyError.message;
                     errorMessage.style.display = 'block';
                     carouselElement.style.display = 'none';
                 }
             } else {
-                console.error('Flickity.js is not loaded. Cannot initialize carousel.');
                 errorMessage.textContent = 'Error initializing activity carousel (Flickity library missing).';
                 errorMessage.style.display = 'block';
                 carouselElement.style.display = 'none'; // Keep carousel hidden if Flickity.js is missing
@@ -230,8 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         })
         .catch(error => {
-            console.error('*** Fetch promise chain error: ***', error); // New log here
-            console.error('Error fetching Strava activities:', error); // Existing log
             loadingMessage.style.display = 'none';
             errorMessage.textContent = `Failed to load activities: ${error.message || 'Unknown error'}`;
             errorMessage.style.display = 'block';
