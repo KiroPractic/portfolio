@@ -7,6 +7,15 @@
   <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light dark">
   <title>Franko Kirincic - about me</title>
+  <!-- Embla Carousel CSS -->
+  <!-- Glide.js CSS Removed -->
+
+  <!-- Flickity CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+
+  <!-- Add Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
     /* Footer styles */
     .footer {
@@ -1223,6 +1232,241 @@
         padding: 15px;
       }
     }
+
+    /* Strava Activities Styles */
+    .strava-activities-container {
+      max-width: 1000px;
+      margin: 60px auto 0; /* Spacing similar to timeline */
+      padding: 40px 20px;
+      position: relative;
+      box-sizing: border-box;
+      /* No overflow hidden here, allow buttons outside maybe */
+    }
+
+    .strava-title {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    /* Activity card styles (apply to content *inside* the slide) */
+    .strava-activity-card {
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 0;
+      transition: background-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
+      min-height: 200px; /* Ensure consistent minimum height for all cards */
+      overflow: hidden; /* Hide overflowing image from rounded corners */
+      display: flex; /* Use flexbox */
+      flex-direction: column; /* Stack children vertically */
+      justify-content: center; /* Vertically center content */
+      position: relative; /* Needed for absolute positioning of icon */
+    }
+
+    body.dark .strava-activity-card {
+      background-color: #222;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Style the image header */
+    .strava-activity-card-header {
+        height: 150px; /* Adjust height as needed */
+        width: 100%;
+        overflow: hidden; /* Ensure image fits bounds */
+        flex-shrink: 0; /* Prevent header from shrinking */
+    }
+
+    .strava-activity-card-header img {
+        display: block; 
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Crop image nicely */
+        border-radius: 0; /* Remove radius from image itself */
+        margin-top: 0; /* Remove previous margin */
+    }
+
+    /* Style the content area below the header */
+    .strava-activity-card-content {
+        padding: 15px 20px; /* Add padding here instead */
+    }
+
+    .strava-activity-card-content h4 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .strava-activity-card-content p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+      color: #555;
+      display: flex; /* Use flexbox for aligning items in the paragraph */
+      align-items: center; /* Vertically align items */
+      gap: 8px; /* Add space between items */
+    }
+
+    /* Add styles for specific stats icons */
+    .strava-activity-card-content .stat-icon {
+        font-size: 0.8em; /* Slightly smaller icon */
+        width: 1.2em; /* Fixed width for alignment */
+        text-align: center;
+        color: #888; /* Subdued color */
+    }
+    body.dark .strava-activity-card-content .stat-icon {
+        color: #aaa;
+    }
+
+    body.dark .strava-activity-card-content p {
+       color: #aaa;
+    }
+
+    .strava-activity-card a {
+        color: inherit; /* Inherit color from parent */
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .strava-activity-card a:hover {
+        color: #4682B4; /* Link hover color from footer */
+    }
+
+    body.dark .strava-activity-card a:hover {
+        color: #6495ED; /* Link hover color from footer */
+    }
+
+    .strava-activity-card img {
+        display: block; /* Prevent extra space below image */
+        max-width: 100%; /* Responsive image */
+        height: auto;
+        margin-top: 15px; /* Space between text and image */
+        border-radius: 6px;
+    }
+
+    /* Initial loading/error messages style */ 
+    #strava-loading,
+    #strava-error {
+        text-align: center;
+        font-style: italic;
+        color: #888;
+        padding: 40px 0; /* Add padding for visibility */
+    }
+    
+    @media (max-width: 768px) {
+       .strava-activities-container {
+         margin-top: 40px;
+         padding: 30px 10px;
+       }
+       .strava-title {
+         font-size: 1.5rem;
+         margin-bottom: 20px;
+       }
+       .strava-activity-card-header {
+         height: 120px; /* Slightly shorter header on mobile */
+       }
+    }
+    /* End Strava Activities Styles */
+
+    /* Flickity Carousel Styles */
+    .strava-carousel .strava-activity-cell {
+      width: 70%; /* Adjust percentage for desired peek effect */
+      min-height: 200px; /* Ensure cells have some height */
+      margin-left: 15px;
+      margin-right: 15px;
+      background-color: transparent; /* Cell background should be transparent, card has color */
+      list-style-type: none; /* Hide default list item markers */
+    }
+
+    /* Hide Flickity Page Dots */
+    .flickity-page-dots {
+        display: none !important; /* Force hide the dots */
+    }
+
+    /* Styles for Strava card when it has a background image */
+    .strava-activity-card.has-background-image {
+      position: relative; /* Needed for the overlay */
+      background-size: cover;
+      background-position: center center;
+      color: #ffffff; /* White text for better contrast */
+      overflow: hidden; /* Keep overlay within rounded corners */
+      min-height: 200px; /* Ensure consistent height with non-image cards */
+    }
+
+    /* Dark overlay using a pseudo-element */
+    .strava-activity-card.has-background-image::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.55); /* Adjust darkness (0.0 to 1.0) */
+      z-index: 1; /* Place overlay below content */
+      border-radius: inherit; /* Match parent card's border radius */
+      transition: background-color 0.3s ease; /* Optional transition */
+    }
+
+    /* Ensure content is above the overlay */
+    .strava-activity-card.has-background-image .strava-activity-card-content {
+      position: relative; /* Needed to stack above pseudo-element */
+      z-index: 2;
+      background-color: transparent; /* Content background should be transparent */
+      padding: 20px; /* Add padding directly to content */
+    }
+
+    /* Style links within cards with background images */
+    .strava-activity-card.has-background-image a {
+      color: #ffffff; /* White links */
+    }
+    
+    .strava-activity-card.has-background-image a:hover {
+      color: #dddddd; /* Slightly lighter on hover */
+    }
+    
+    /* Ensure paragraphs inside are also white */
+    .strava-activity-card.has-background-image p {
+      color: #f0f0f0; /* Slightly off-white for paragraphs */
+    }
+
+    /* Container for horizontal stats */
+    .strava-stats-container {
+        display: flex;
+        flex-wrap: wrap; /* Allow items to wrap to the next line */
+        gap: 15px; /* Space between stat items */
+        margin-top: 10px; /* Space above the stats block */
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    /* Individual stat item */
+    .strava-stat {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Space between icon and text */
+    }
+
+    /* Activity Type Icon Styles (when inline with title) */
+    .strava-activity-card-content h3 .strava-activity-type-icon {
+        font-size: 0.9em; /* Slightly smaller than title */
+        margin-right: 8px; /* Space between icon and title text */
+        color: #888; /* Match other icons */
+        vertical-align: middle; /* Align with text */
+    }
+
+    body.dark .strava-activity-card-content h3 .strava-activity-type-icon {
+        color: #aaa;
+    }
+
+    /* Style Flickity buttons for dark mode */
+    body.dark .flickity-prev-next-button {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark .flickity-prev-next-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
   </style>
 </head>
 <body class="dark">
@@ -1308,6 +1552,21 @@
     </div>
   </div>
   
+  <!-- Strava Activities Section -->
+  <div class="strava-activities-container">
+    <h2 class="strava-title">Recent Activities</h2>
+    <!-- Flickity Carousel structure -->
+    <div class="strava-carousel">
+        <ul id="strava-activities-list" class="flickity-slider-container"> 
+            <!-- Activity slides (cells) will be generated here by strava.js -->
+        </ul>
+    </div>
+
+    <!-- Loading and error messages outside the carousel structure -->
+    <p id="strava-loading">Loading activities...</p>
+    <p id="strava-error" style="display: none;">Could not load Strava activities.</p>
+  </div>
+  
   <!-- External Libraries from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script src="https://unpkg.com/globe.gl"></script>
@@ -1359,5 +1618,11 @@
     // Set current year in footer
     document.getElementById('current-year').textContent = new Date().getFullYear();
   </script>
+
+  <!-- Flickity JS -->
+  <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+
+  <!-- Strava Activities Script -->
+  <script src="strava.js" defer></script>
 </body>
 </html>

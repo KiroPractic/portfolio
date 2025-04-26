@@ -1,0 +1,241 @@
+// --- Strava API Fetch and Display ---
+
+// Helper function to format seconds into Hh Mm Ss format
+function formatSecondsToHMS(totalSeconds) {
+    if (isNaN(totalSeconds) || totalSeconds < 0) {
+        return 'Invalid time';
+    }
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+
+    let result = '';
+    if (hours > 0) {
+        result += `${hours}h `;
+    }
+    if (minutes > 0 || hours > 0) { // Show minutes if hours are present or if minutes > 0
+        result += `${minutes}m `;
+    }
+    result += `${seconds}s`;
+    return result.trim(); // Remove trailing space if only seconds
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const carouselElement = document.querySelector('.strava-carousel'); // Target Flickity container
+    const loadingMessage = document.getElementById('strava-loading');
+    const errorMessage = document.getElementById('strava-error');
+    const activitiesList = document.getElementById('strava-activities-list');
+
+    const apiUrl = '/api/strava';
+
+    if (!carouselElement || !loadingMessage || !errorMessage || !activitiesList) {
+        console.error('Strava Carousel section elements not found.');
+        if (errorMessage) errorMessage.textContent = 'Error: Could not find necessary HTML elements for Strava section.';
+        if (errorMessage) errorMessage.style.display = 'block';
+        if (loadingMessage) loadingMessage.style.display = 'none';
+        return;
+    }
+
+    // Show loading message initially, hide carousel container
+    loadingMessage.style.display = 'block';
+    errorMessage.style.display = 'none';
+    carouselElement.style.display = 'none'; // Hide Carousel until loaded
+    activitiesList.innerHTML = ''; // Clear any potential placeholders
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Entered .then block with data'); // New log here
+            console.log('API Response Data:', data);
+
+            if (data.error) {
+                 throw new Error(data.error);
+            }
+
+            // Check if data is an array and has activities
+            if (!Array.isArray(data) || data.length === 0) {
+                loadingMessage.style.display = 'none'; // Hide loading message
+                errorMessage.textContent = 'No recent Strava activities found.';
+                errorMessage.style.display = 'block';
+                carouselElement.style.display = 'none'; // Keep carousel hidden
+                return;
+            }
+
+            activitiesList.innerHTML = ''; // Clear list before populating
+
+            console.log(`Processing ${data.length} activities...`); // Log before loop (use data.length)
+
+            data.forEach((activity, index) => { // Iterate over data directly
+                console.log(`Processing activity ${index + 1}: ${activity.name}`); // Log start of each activity
+                try {
+                    // Create the list item (cell) for Flickity
+                    const cellItem = document.createElement('li');
+                    cellItem.classList.add('strava-activity-cell'); // Add class for Flickity cellSelector
+
+                    // Create the card div that goes inside the cell
+                    const cardDiv = document.createElement('div');
+                    cardDiv.classList.add('strava-activity-card');
+
+                    const date = new Date(activity.start_date_local).toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+                    const distance = (activity.distance / 1000).toFixed(2); // km
+                    const movingTimeFormatted = formatSecondsToHMS(activity.moving_time);
+                    const elevation = activity.total_elevation_gain.toFixed(0); // meters
+                    const photoUrl = activity.photos?.primary?.urls['600']; // Use 600px version
+                    const calories = activity.calories ? activity.calories.toFixed(0) : null;
+                    const avgHeartrate = activity.average_heartrate ? activity.average_heartrate.toFixed(0) : null;
+                    const kudos = activity.kudos_count;
+
+                    let cardHTML = '';
+                    let activityIconHTML = '';
+
+                    // Map activity type to Font Awesome icon class
+                    let iconClass = 'fa-solid fa-person-running'; // Default icon
+                    switch (activity.type) {
+                        case 'Ride':
+                        case 'VirtualRide':
+                        case 'EBikeRide':
+                        case 'Velomobile':
+                        case 'MountainBikeRide':
+                        case 'GravelRide':
+                            iconClass = 'fa-solid fa-person-biking';
+                            break;
+                        case 'Run':
+                        case 'VirtualRun':
+                        case 'TrailRun':
+                            iconClass = 'fa-solid fa-person-running';
+                            break;
+                        case 'Swim':
+                            iconClass = 'fa-solid fa-person-swimming';
+                            break;
+                        case 'Walk':
+                        case 'Hike':
+                        case 'Snowshoe':
+                             iconClass = 'fa-solid fa-person-hiking';
+                            break;
+                        case 'AlpineSki':
+                        case 'BackcountrySki':
+                        case 'NordicSki':
+                        case 'Snowboard':
+                        case 'RollerSki':
+                            iconClass = 'fa-solid fa-person-skiing';
+                            break;
+                        case 'WeightTraining':
+                        case 'Crossfit':
+                        case 'Workout':
+                            iconClass = 'fa-solid fa-dumbbell';
+                            break;
+                        case 'Yoga':
+                        case 'Pilates':
+                             iconClass = 'fa-solid fa-om'; // Or another suitable icon
+                            break;
+                        case 'Rowing':
+                        case 'VirtualRow':
+                        case 'Canoeing':
+                        case 'Kayaking':
+                        case 'StandUpPaddling':
+                            iconClass = 'fa-solid fa-water'; // Or fa-ship, fa-anchor
+                            break;
+                        case 'Windsurf':
+                        case 'Kitesurf':
+                        case 'Surfing':
+                            iconClass = 'fa-solid fa-person-surfing';
+                            break;
+                        // Add more cases as needed for other types
+                        default:
+                             iconClass = 'fa-solid fa-medal'; // Generic fallback
+                    }
+                    activityIconHTML = `<i class="strava-activity-type-icon ${iconClass}" title="${activity.type}"></i>`;
+
+                    // Add background image and class if photo exists
+                    if (photoUrl) {
+                        console.log(`Applying background image for activity ${activity.id}: ${photoUrl}`);
+                        cardDiv.style.backgroundImage = `url('${photoUrl}')`;
+                        cardDiv.classList.add('has-background-image');
+                    }
+
+                    // Always add the content div
+                    cardHTML = `
+                        
+                        <div class="strava-activity-card-content">
+                            <h3>${activityIconHTML}<a href="https://www.strava.com/activities/${activity.id}" target="_blank" rel="noopener noreferrer">${activity.name}</a></h3>
+                            <p>${date}</p>
+                            <div class="strava-stats-container">
+                                <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-ruler-horizontal"></i></span> ${distance} km</span>
+                                <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-stopwatch"></i></span> ${movingTimeFormatted}</span>
+                                <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-mountain"></i></span> ${elevation} m</span>
+                                ${calories ? `<span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-fire-flame-curved"></i></span> ${calories} kcal</span>` : ''}
+                                ${avgHeartrate ? `<span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-heart-pulse"></i></span> ${avgHeartrate} bpm avg</span>` : ''}
+                                <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-thumbs-up"></i></span> ${kudos}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    cardDiv.innerHTML = cardHTML; // Set content for the card div
+                    cellItem.appendChild(cardDiv); // Append card div to the cell list item
+                    activitiesList.appendChild(cellItem); // Append the cell list item to the UL
+                    console.log(`Successfully processed activity ${index + 1}`); // Log successful processing
+
+                } catch (loopError) {
+                    console.error(`Error processing activity ${index + 1} (${activity.name}):`, loopError); // Log error during loop
+                    // Optionally, decide if you want to stop or continue processing other activities
+                    // For now, we log and continue
+                }
+            });
+
+            console.log('Finished processing activities.'); // Log after loop
+
+            // Initialize Flickity only if activities were found and Flickity is available
+            console.log('Checking if Flickity is available...');
+            if (typeof Flickity !== 'undefined') {
+                console.log('Flickity is available. Attempting to initialize...');
+                try {
+                    const flkty = new Flickity(carouselElement, {
+                        cellSelector: '.strava-activity-cell',
+                        cellAlign: 'center',
+                        contain: true,
+                        wrapAround: true, // Optional: enable infinite looping
+                        pageDots: false, // Optional: disable dots
+                        prevNextButtons: false // Add this line to hide arrows
+                        // Add other options here as needed
+                    });
+                    console.log('Flickity initialized successfully.');
+
+                    // Give the browser a moment to render and then resize Flickity
+                    setTimeout(() => {
+                        flkty.resize();
+                        console.log('Flickity resized.');
+                    }, 100); // 100ms delay, can be adjusted
+
+                    carouselElement.style.display = 'block'; // Show the carousel container now
+                    errorMessage.style.display = 'none'; // Hide error message if successful
+                } catch (flktyError) {
+                    console.error('Error initializing Flickity:', flktyError);
+                    errorMessage.textContent = 'Error initializing activity carousel: ' + flktyError.message;
+                    errorMessage.style.display = 'block';
+                    carouselElement.style.display = 'none';
+                }
+            } else {
+                console.error('Flickity.js is not loaded. Cannot initialize carousel.');
+                errorMessage.textContent = 'Error initializing activity carousel (Flickity library missing).';
+                errorMessage.style.display = 'block';
+                carouselElement.style.display = 'none'; // Keep carousel hidden if Flickity.js is missing
+            }
+
+            loadingMessage.style.display = 'none'; // Always hide loading message after processing
+
+        })
+        .catch(error => {
+            console.error('*** Fetch promise chain error: ***', error); // New log here
+            console.error('Error fetching Strava activities:', error); // Existing log
+            loadingMessage.style.display = 'none';
+            errorMessage.textContent = `Failed to load activities: ${error.message || 'Unknown error'}`;
+            errorMessage.style.display = 'block';
+            carouselElement.style.display = 'none'; // Keep carousel hidden on error
+            activitiesList.innerHTML = ''; // Clear list on error
+        });
+});
