@@ -32,10 +32,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Add laptop to the table
-  const table = document.querySelector('.table');
-  if (table) {
-    table.appendChild(laptop);
+  // Add laptop to the items container
+  const itemContainer = document.querySelector('.table-items-container');
+  if (itemContainer) {
+    itemContainer.appendChild(laptop);
+  } else {
+     console.error('Table items container not found for laptop placement.');
   }
   
   // Function to update laptop screen based on theme
@@ -43,10 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const isDarkMode = document.body.classList.contains('dark');
     if (isDarkMode) {
       laptopScreen.style.backgroundImage = "url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeng5dHkyZmVkbjFoZnZ2N2h0b294MHNuNndpZWs4MWMybzI4M2gyYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V4NSR1NG2p0KeJJyr5/giphy.gif')";
-      // The background color is handled by CSS (.dark .laptop-screen)
     } else {
       laptopScreen.style.backgroundImage = "url('windows_xp.gif')";
-      // The background color is handled by CSS (.laptop-screen)
     }
   };
   
@@ -67,88 +67,63 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add laptop styles
   const style = document.createElement('style');
   style.textContent = `
-    /* Laptop styling */
+    /* Laptop styling - Flex Item */
     .laptop {
-      position: absolute;
-      top: -120px; /* Position higher above the table */
-      right: 50%; /* Base positioning */
+      position: relative; /* Needed for children */
       width: 180px;
       height: 120px;
-      z-index: 2000;
-      transform: perspective(500px) rotateX(10deg);
+      z-index: 2000; /* Keep z-index relative to siblings */
+      transform: perspective(500px) rotateX(10deg); /* No translateY */
       transform-origin: bottom center;
-      pointer-events: auto; /* Allow interactions */
+      pointer-events: auto; 
       transition: transform 0.2s ease;
+      flex-shrink: 0; 
     }
     
     .laptop:hover {
-      transform: perspective(500px) rotateX(10deg) translateY(-5px); /* Slight hover effect */
-    }
-    
-    /* Desktop positioning - consistent across all large screens */
-    @media (min-width: 1205px) {
-      .laptop {
-        right: 55%; /* More consistent position on extra large screens */
-        top: -120px;
-      }
+      transform: perspective(500px) rotateX(10deg) translateY(-5px); 
     }
     
     /* Laptop lid (top part with screen) */
     .laptop-lid {
-      position: absolute;
+      position: absolute; 
       bottom: 10px;
       left: 0;
       width: 100%;
       height: 110px;
-      background-color: #333; /* Dark gray */
+      background-color: #333; 
       border-radius: 6px 6px 0 0;
       border: 2px solid #222;
       border-bottom: none;
       box-sizing: border-box;
       overflow: hidden;
+      z-index: 2; 
     }
     
     /* Laptop screen */
     .laptop-screen {
-      position: absolute;
+      position: absolute; 
       top: 5px;
       left: 5px;
       right: 5px;
       bottom: 5px;
-      background-color: #fff; /* Default light mode background */
+      background-color: #fff; 
       border: 1px solid #444;
       box-sizing: border-box;
       transition: background-color var(--transition-duration) ease;
-      /* Styles for background image */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      z-index: 1; 
     }
     
     body.dark .laptop-screen {
-      background-color: #222; /* Dark screen background in dark mode */
-      /* Dark mode GIF set via JS */
+      background-color: #222; 
     }
-    
-    /* Screen GIF styling removed */
-    /*
-    .screen-gif {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.85;
-      mix-blend-mode: screen;
-    }
-    
-    body.dark .screen-gif {
-      opacity: 0.7;
-      filter: brightness(0.8) contrast(1.2);
-    }
-    */
-    
+        
     /* Laptop webcam */
     .laptop-webcam {
-      position: absolute;
+      position: absolute; 
       top: 3px;
       left: 50%;
       transform: translateX(-50%);
@@ -156,25 +131,25 @@ document.addEventListener('DOMContentLoaded', function() {
       height: 4px;
       background-color: #222;
       border-radius: 50%;
-      z-index: 10;
+      z-index: 3; 
     }
     
     /* Laptop base (bottom part) */
     .laptop-base {
-      position: absolute;
+      position: absolute; 
       bottom: 0;
       left: 0;
       width: 100%;
       height: 10px;
-      background-color: #2a2a2a; /* Slightly lighter than the lid */
+      background-color: #2a2a2a; 
       border-radius: 2px 2px 6px 6px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      z-index: 1; 
     }
     
-    /* Responsive adjustments for laptop */
+    /* Responsive adjustments only for transform/scale */
     @media (max-width: 992px) and (min-width: 768px) {
       .laptop {
-        right: 40%;
         transform: perspective(500px) rotateX(10deg) scale(0.9);
       }
       .laptop:hover {
@@ -184,8 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     @media (max-width: 768px) {
       .laptop {
-        top: -120px;
-        right: 15%; /* Position to the right side on mobile */
         transform: perspective(500px) rotateX(10deg) scale(0.8);
       }
       .laptop:hover {
@@ -195,8 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     @media (max-width: 400px) {
       .laptop {
-        right: 10%; /* Move even closer to the edge on very small screens */
-        transform: perspective(500px) rotateX(10deg) scale(0.7); /* Slightly smaller */
+        transform: perspective(500px) rotateX(10deg) scale(0.7);
       }
       .laptop:hover {
         transform: perspective(500px) rotateX(10deg) translateY(-5px) scale(0.7);
