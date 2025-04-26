@@ -10,13 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
   laptopLid.className = 'laptop-lid';
   
   const laptopScreen = document.createElement('div');
-  laptopScreen.className = 'laptop-screen';
-  
-  // Add coding GIF to the screen
-  const screenGif = document.createElement('img');
-  screenGif.src = 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeng5dHkyZmVkbjFoZnZ2N2h0b294MHNuNndpZWs4MWMybzI4M2gyYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V4NSR1NG2p0KeJJyr5/giphy.gif';
-  screenGif.className = 'screen-gif';
-  laptopScreen.appendChild(screenGif);
+  laptopScreen.className = 'laptop-screen'; // Will set background image via JS
   
   const laptopWebcam = document.createElement('div');
   laptopWebcam.className = 'laptop-webcam';
@@ -43,6 +37,32 @@ document.addEventListener('DOMContentLoaded', function() {
   if (table) {
     table.appendChild(laptop);
   }
+  
+  // Function to update laptop screen based on theme
+  const updateLaptopScreen = () => {
+    const isDarkMode = document.body.classList.contains('dark');
+    if (isDarkMode) {
+      laptopScreen.style.backgroundImage = "url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeng5dHkyZmVkbjFoZnZ2N2h0b294MHNuNndpZWs4MWMybzI4M2gyYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V4NSR1NG2p0KeJJyr5/giphy.gif')";
+      // The background color is handled by CSS (.dark .laptop-screen)
+    } else {
+      laptopScreen.style.backgroundImage = "url('windows_xp.gif')";
+      // The background color is handled by CSS (.laptop-screen)
+    }
+  };
+  
+  // Initial screen update
+  updateLaptopScreen();
+  
+  // Observe body class changes for theme switching
+  const themeObserver = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.attributeName === 'class') {
+        updateLaptopScreen();
+      }
+    });
+  });
+  
+  themeObserver.observe(document.body, { attributes: true });
   
   // Add laptop styles
   const style = document.createElement('style');
@@ -95,29 +115,36 @@ document.addEventListener('DOMContentLoaded', function() {
       left: 5px;
       right: 5px;
       bottom: 5px;
-      background-color: #fff; /* White screen */
+      background-color: #fff; /* Default light mode background */
       border: 1px solid #444;
       box-sizing: border-box;
       transition: background-color var(--transition-duration) ease;
+      /* Styles for background image */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
     
     body.dark .laptop-screen {
-      background-color: #222; /* Dark screen in dark mode */
+      background-color: #222; /* Dark screen background in dark mode */
+      /* Dark mode GIF set via JS */
     }
     
-    /* Screen GIF styling */
+    /* Screen GIF styling removed */
+    /*
     .screen-gif {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.85; /* Slightly transparent to show through screen */
-      mix-blend-mode: screen; /* Better display on dark backgrounds */
+      opacity: 0.85;
+      mix-blend-mode: screen;
     }
     
     body.dark .screen-gif {
-      opacity: 0.7; /* More transparent in dark mode */
-      filter: brightness(0.8) contrast(1.2); /* Better visibility in dark mode */
+      opacity: 0.7;
+      filter: brightness(0.8) contrast(1.2);
     }
+    */
     
     /* Laptop webcam */
     .laptop-webcam {
