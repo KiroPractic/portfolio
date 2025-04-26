@@ -1095,12 +1095,13 @@
       top: 50%;
       left: 50%;
       width: 90%;
-      max-width: 400px;
+      max-width: 400px; /* Keep max-width for desktop */
+      max-height: 80vh; /* Set a max height relative to viewport */
       background-color: white;
       border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       z-index: 2050;
-      overflow: hidden;
+      overflow-y: auto; /* Change from hidden to auto for vertical scrolling */
       opacity: 0;
       transform: translate(-50%, -45%);
       pointer-events: none;
