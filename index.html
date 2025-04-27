@@ -248,13 +248,7 @@
     /* Fix for specific problem widths (like 581px) */
     @media (max-width: 480px) {
       /* Center table under lamp */
-      .table {
-        position: absolute;
-        top: 350px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 320px;
-      }
+ 
     }
     
     /* Ensure enough space at the bottom for small screens */
@@ -327,8 +321,6 @@
     .table-items-container {
       position: absolute;
       bottom: 30px; /* Position bottom edge relative to parent */
-      /* top: 350px; REMOVED */
-      width: 85%;
       max-width: 1100px; 
       left: 50%;
       transform: translateX(-50%); 
@@ -688,6 +680,14 @@
       }
     }
     
+    /* Adjust layout for wider screens to prevent overlap */
+    @media (min-width: 993px) { 
+      .name-container {
+        width: 55%; /* Reduce width */
+        margin-right: 10%; /* Increase right margin slightly */
+      }
+    }
+
     @media (max-width: 768px) {
       /* Simple mobile layout with flexbox */
       .container {
@@ -825,26 +825,24 @@
       }
       
       /* Position lamp on left side */
-      #lamp-container {
-        position: absolute;
-        top: 120px;
-        left: 20%; /* Move to the left side */
-        transform: translateX(-50%);
-        margin: 0;
-      }
+      
       
       /* Position table spanning across screen */
-      .table {
-        position: absolute;
-        top: 320px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 95%; /* Wide enough for both lamp and laptop */
-      }
+     
 
       /* Adjust table items container position for smaller mobile */
+      /* Apply gap to the container */
       .table-items-container {
-        top: 320px; /* Match table top position */
+        gap: -10px; /* Adjust as needed */
+      }
+
+      /* Target specific items for scaling */
+      .table-items-container > #lamp-container,
+      .table-items-container > .laptop,
+      .table-items-container > .baseball-cap {
+        transform: scale(0.6); /* Apply consistent scaling */
+        transform-origin: bottom center; /* Scale from the bottom center */
+        /* margin: 0 -5px; Removed negative margin, rely on gap */
       }
     }
     

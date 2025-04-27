@@ -166,13 +166,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    @media (max-width: 400px) {
+    /* Adjusted breakpoint and removed hover */
+    @media (max-width: 480px) { /* Changed from 400px */
       .laptop {
-        transform: perspective(500px) rotateX(10deg) scale(0.7);
+        transform: perspective(500px) rotateX(10deg); /* Removed scale(0.75) */
       }
-      .laptop:hover {
-        transform: perspective(500px) rotateX(10deg) translateY(-5px) scale(0.7);
-      }
+      /* REMOVED :hover rule for screens under 480px */
     }
   `;
   document.head.appendChild(style);

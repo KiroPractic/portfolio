@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
     /* Baseball Cap Styling - Flex Item */
     .baseball-cap {
       /* position: ??? REMOVED */
-      --cap-height: 144px; /* Reduced by 20% */
-      --cap-width: 230px;  /* Reduced by 20%, Restored */
+      --cap-height: 72px; /* Halved from 144px */
+      --cap-width: 115px;  /* Halved from 230px */
       
       width: var(--cap-width); /* Restored */
       height: var(--cap-height);
@@ -55,40 +55,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     .baseball-cap:hover {
-      transform: perspective(600px) rotateX(1deg) translateY(-5px); 
+      transform: translateY(-5px); 
     }
         
     /* Responsive Adjustments only for transform/scale */
     @media (max-width: 992px) and (min-width: 768px) {
       .baseball-cap {
-        --cap-height: 130px; /* Reduced by 20% */
-        --cap-width: 207px; /* Reduced by 20%, Restored */
-        transform: perspective(600px) rotateX(1deg) scale(0.72); /* Reduced by 20% */
-      }
-      .baseball-cap:hover {
-        transform: perspective(600px) rotateX(1deg) translateY(-5px) scale(0.72); /* Reduced by 20% */
+        transform: perspective(600px) rotateX(1deg); /* Reduced by 20% */
       }
     }
 
     @media (max-width: 768px) {
       .baseball-cap {
-        --cap-height: 115px; /* Reduced by 20% */
-        --cap-width: 184px; /* Reduced by 20%, Restored */
-        transform: perspective(600px) rotateX(1deg) scale(0.64); /* Reduced by 20% */
-      }
-      .baseball-cap:hover {
-        transform: perspective(600px) rotateX(1deg) translateY(-5px) scale(0.64); /* Reduced by 20% */
+        transform: perspective(600px) rotateX(1deg); /* Reduced by 20% */
       }
     }
 
-    @media (max-width: 400px) {
+    /* Apply smaller scaling below 480px */
+    @media (max-width: 480px) { /* Changed from 400px */
       .baseball-cap {
-        --cap-height: 101px; /* Reduced by 20% */
-        --cap-width: 162px; /* Reduced by 20%, Restored */
-        transform: perspective(600px) rotateX(1deg) scale(0.56); /* Reduced by 20% */
-      }
-       .baseball-cap:hover {
-         transform: perspective(600px) rotateX(1deg) translateY(-5px) scale(0.56); /* Reduced by 20% */
+        /* Explicitly set halved dimensions for this breakpoint */
+        transform: perspective(600px) rotateX(1deg); /* Adjusted scale */
       }
     }
   `;

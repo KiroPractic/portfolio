@@ -116,8 +116,6 @@ Events.on(mouseConstraint, 'startdrag', (event) => {
   }
 });
 
-
-
 // Function to check distance and toggle theme if needed
 function checkToggleTheme() {
   const dx = ropePull.position.x - anchor.x;
@@ -142,18 +140,27 @@ function handleInteraction(eventX, eventY) {
   if (typeof eventX === 'undefined' || typeof eventY === 'undefined') return;
   
   const bounds = canvas.getBoundingClientRect();
-  const clickX = eventX - bounds.left;
-  const clickY = eventY - bounds.top;
+  let clickX = eventX - bounds.left;
+  let clickY = eventY - bounds.top;
   
-  // Check if click/touch is close to the dongle
+  // Adjust coordinates if scaling is applied (< 480px)
+  const scaleFactor = window.innerWidth < 480 ? 0.6 : 1.0;
+  if (scaleFactor !== 1.0) {
+      // Map screen coordinates (relative to scaled bounds) to physics coordinates
+      clickX /= scaleFactor;
+      clickY /= scaleFactor;
+  }
+  
+  // Check if click/touch is close to the dongle (using adjusted coords)
   const dx = clickX - ropePull.position.x;
   const dy = clickY - ropePull.position.y;
   const distance = Math.sqrt(dx*dx + dy*dy);
   
-  console.log('Click/Touch distance:', distance);
+  console.log('Click/Touch distance (adjusted):', distance);
   
-  if (distance < 40) {
-    // Store the mouse position for our custom constraint
+  if (distance < 40) { // Threshold might need adjustment if interaction feels off
+    // Store the *adjusted* mouse position for our custom constraint
+    // These coordinates are now in the physics engine's space
     customMousePosition.x = clickX;
     customMousePosition.y = clickY;
     
@@ -174,8 +181,20 @@ function updateCustomConstraint(eventX, eventY) {
   if (!customConstraintActive || !dongleSelected) return;
   
   const bounds = canvas.getBoundingClientRect();
-  customMousePosition.x = eventX - bounds.left;
-  customMousePosition.y = eventY - bounds.top;
+  let adjustedX = eventX - bounds.left;
+  let adjustedY = eventY - bounds.top;
+  
+  // Adjust coordinates if scaling is applied (< 480px)
+  const scaleFactor = window.innerWidth < 480 ? 0.6 : 1.0;
+  if (scaleFactor !== 1.0) {
+      // Map screen coordinates (relative to scaled bounds) to physics coordinates
+      adjustedX /= scaleFactor;
+      adjustedY /= scaleFactor;
+  }
+  
+  // Update the custom constraint anchor point in physics space
+  customMousePosition.x = adjustedX;
+  customMousePosition.y = adjustedY;
 }
 
 // Release the custom constraint
