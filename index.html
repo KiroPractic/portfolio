@@ -583,21 +583,27 @@
       /* No position changes */
     }
     
-    /* Header content with flexbox */
+    /* Header content with flexbox - Centered by default */
     .header-content {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center; /* Center content by default */
       width: 100%;
       position: relative;
       z-index: 1;
     }
     
+    /* Name container - Full width and centered content by default */
     .name-container {
-      width: 65%;
-      padding-top: 80px;
-      margin-right: 8%;
+      width: 100%; /* Full width by default */
+      padding-top: 30px; /* Default top padding (adjust in media queries if needed) */
+      padding-bottom: 40px;
+      margin-right: 0; /* No margin by default */
+      display: flex; /* Use flexbox */
+      flex-direction: column; /* Stack name and subtitle vertically */
+      align-items: center; /* Center items horizontally */
     }
     
+    /* Name - Centered by default */
     .name {
       font-size: 5rem;
       font-weight: 700;
@@ -605,64 +611,39 @@
       line-height: 1.1;
       letter-spacing: -0.02em;
       text-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      text-align: left;
+      text-align: center; /* Center text by default */
       background: none;
       border: none;
       padding: 0;
     }
     
+    /* Subtitle - Centered by default */
     .subtitle {
       font-size: 1.5rem;
       margin: 0.5rem 0 0 0;
       color: #666;
-      text-align: left;
+      text-align: center; /* Center text by default */
       background: none;
       border: none;
       padding: 0;
     }
     
-    /* Title and subtitle */
-    .hero h1 {
-      font-size: 5rem;
-      font-weight: 700;
-      margin: 0 0 20px 0;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      transition: color var(--transition-duration) ease;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow for better readability */
-      text-align: center; /* Center text */
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
-    
-    .hero p {
-      font-size: 1.5rem;
-      margin: 0;
-      color: #666;
-      transition: color var(--transition-duration) ease;
-      text-align: center; /* Center text */
-    }
+    /* Title and subtitle - REMOVE .hero styles as they are redundant */
+    /* .hero h1 { ... } */
+    /* .hero p { ... } */
     
     /* Responsive styles */
     @media (max-width: 1200px) {
-      .hero h1 {
+      /* Adjust font sizes */
+      .name {
         font-size: 4rem;
       }
+      /* Removed .hero h1 adjustment */
     }
     
     @media (max-width: 992px) {
-      main {
-        left: 220px; /* Fixed distance from left instead of percentage */
-        width: calc(100% - 240px); /* Calculate remaining width */
-      }
-      
-      .name-container {
-        width: 60%;
-        margin-right: 5%;
-        padding-top: 70px;
-      }
-      
+      /* Remove absolute positioning for main - handled by centering */
+      /* main { ... } */
       .name {
         font-size: 3.5rem;
       }
@@ -671,25 +652,35 @@
         font-size: 1.25rem;
       }
       
-      .hero h1 {
-        font-size: 3.5rem;
-      }
-      
-      .hero p {
-        font-size: 1.25rem;
-      }
+      /* Removed .hero h1/p adjustments */
     }
     
-    /* Adjust layout for wider screens to prevent overlap */
+    /* Adjustments for wider screens (optional spacing adjustments) */
     @media (min-width: 993px) { 
-      .name-container {
-        width: 55%; /* Reduce width */
-        margin-right: 10%; /* Increase right margin slightly */
+      /* Optionally adjust padding or font size for very wide screens if needed */
+    }
+
+    /* Adjustments for desktop (keep lamp/table positioning) */
+    @media (min-width: 769px) {
+      /* Remove absolute positioning for main */
+      /* main { ... } */
+      
+      /* Keep table positioning */
+      .table {
+        position: absolute;
+        top: 350px;
+        left: 5%;
+      }
+      
+      /* Keep scroll-spacer hidden */
+      .scroll-spacer {
+        display: none;
       }
     }
 
     @media (max-width: 768px) {
-      /* Simple mobile layout with flexbox */
+      /* Mobile layout uses flexbox centering by default now */
+      /* .container adjustments remain */
       .container {
         height: auto;
         position: relative;
@@ -697,29 +688,14 @@
         max-width: 100%;
       }
       
-      /* Center content with flexbox */
-      .header-content {
-        justify-content: center;
-      }
+      /* Remove redundant centering styles */
+      /* .header-content { justify-content: center; } */
+    
       
-      .name-container {
-        width: 100%;
-        padding-top: 30px;
-        margin-right: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+      /* Remove redundant centering styles */
+      /* .name, .subtitle { text-align: center; ... } */
       
-      .name, .subtitle {
-        text-align: center;
-        width: auto;
-        background: none;
-        border: none;
-        box-shadow: none;
-        padding: 0;
-      }
-      
+      /* Keep other mobile-specific styles */
       .text-light-effect {
         position: absolute;
         top: 30px;
@@ -810,11 +786,7 @@
       }
     }
     
-    @media (max-width: 480px) {
-      .name-container {
-        padding-top: 20px;
-      }
-      
+    @media (max-width: 480px) {      
       .name {
         font-size: 2.2rem;
       }
@@ -833,7 +805,7 @@
       /* Adjust table items container position for smaller mobile */
       /* Apply gap to the container */
       .table-items-container {
-        gap: -10px; /* Adjust as needed */
+        /* Removed gap: -10px; */
       }
 
       /* Target specific items for scaling */
@@ -842,7 +814,7 @@
       .table-items-container > .baseball-cap {
         transform: scale(0.6); /* Apply consistent scaling */
         transform-origin: bottom center; /* Scale from the bottom center */
-        /* margin: 0 -5px; Removed negative margin, rely on gap */
+        margin: 0 -20px; /* Add negative margin to pull items closer */
       }
     }
     
