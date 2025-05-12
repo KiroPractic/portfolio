@@ -228,16 +228,15 @@
       }
       
       main {
-        position: absolute;
-        top: 80px;
-        left: 25%;
+        position: relative;
         width: 70%;
+        margin: 80px auto 0;
       }
       
       .table {
-        position: absolute;
-        top: 350px;
-        left: 5%;
+        position: relative;
+        width: 90%;
+        margin: 0 auto;
       }
       
       .scroll-spacer {
@@ -247,8 +246,11 @@
     
     /* Fix for specific problem widths (like 581px) */
     @media (max-width: 480px) {
-      /* Center table under lamp */
- 
+      .table {
+        position: relative;
+        width: 90%;
+        margin: 0 auto;
+      }
     }
     
     /* Ensure enough space at the bottom for small screens */
@@ -261,9 +263,7 @@
     
     /* Dark wood table that spans across the page */
     .table {
-      position: absolute;
-      top: 350px; /* Positioned below the lamp */
-      left: 5%;
+      position: relative;
       width: 90%; /* Almost the whole width */
       height: 15px; /* Thin, 2D rectangle */
       background-color: #1a120c; /* Dark wood color */
@@ -279,6 +279,7 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Shadow under the table */
       min-width: 300px; /* Ensure minimum width even on small screens */
       pointer-events: none; /* Allow scrolling through the table */
+      margin: 0 auto; /* Center the table */
     }
     
     /* Table top edge lighting effect */
@@ -319,8 +320,7 @@
     
     /* Flex container for items on the table */
     .table-items-container {
-      position: absolute;
-      bottom: 30px; /* Position bottom edge relative to parent */
+      position: relative;
       max-width: 1100px; 
       left: 50%;
       transform: translateX(-50%); 
@@ -662,25 +662,24 @@
 
     /* Adjustments for desktop (keep lamp/table positioning) */
     @media (min-width: 769px) {
-      /* Remove absolute positioning for main */
-      /* main { ... } */
-      
-      /* Keep table positioning */
-      .table {
-        position: absolute;
-        top: 350px;
-        left: 5%;
+      main {
+        position: relative;
+        width: 70%;
+        margin: 80px auto 0;
       }
       
-      /* Keep scroll-spacer hidden */
+      .table {
+        position: relative;
+        width: 90%;
+        margin: 0 auto;
+      }
+      
       .scroll-spacer {
         display: none;
       }
     }
 
     @media (max-width: 768px) {
-      /* Mobile layout uses flexbox centering by default now */
-      /* .container adjustments remain */
       .container {
         height: auto;
         position: relative;
@@ -688,14 +687,16 @@
         max-width: 100%;
       }
       
-      /* Remove redundant centering styles */
-      /* .header-content { justify-content: center; } */
-    
+      .table {
+        position: relative;
+        width: 90%;
+        margin: 0 auto;
+        height: 15px;
+        z-index: 2;
+        pointer-events: none;
+      }
       
-      /* Remove redundant centering styles */
-      /* .name, .subtitle { text-align: center; ... } */
       
-      /* Keep other mobile-specific styles */
       .text-light-effect {
         position: absolute;
         top: 30px;
@@ -704,44 +705,10 @@
         height: 120px;
       }
       
-      /* Lamp on left side of the screen */
-      #lamp-container {
-        width: 120px; /* Maintain size match with shade */
-        height: 200px; /* Maintain height */
-        z-index: 3; /* Keep z-index */
-        pointer-events: none; /* Keep pointer-events */
-        overflow: visible; /* Keep overflow */
-      }
-      
-      /* Only allow pointer events on the canvas for interaction */
-      #matter-canvas {
-        pointer-events: auto;
-      }
-      
-      /* Table spanning across for both lamp and laptop */
-      .table {
-        position: absolute;
-        top: 350px;
-        width: 90%; /* Wider table to fit both lamp and laptop */
-        left: 50%;
-        transform: translateX(-50%);
-        margin: 0;
-        height: 15px;
-        z-index: 2;
-        pointer-events: none;
-      }
-      
-      /* Adjust table items container position for mobile */
-      .table-items-container {
-        top: 350px; /* Match table top position */
-      }
-      
-      /* Adjust lamp base to ensure connection with table */
       .lamp-base {
         bottom: 0;
       }
       
-      /* Simple adjustment for text */
       .name {
         font-size: 3rem;
       }
@@ -750,13 +717,11 @@
         font-size: 1.25rem;
       }
       
-      /* Fix lamp stem-to-base connection on mobile */
       .lamp-stem {
         bottom: 15px;
         height: 105px;
       }
       
-      /* Additional fixes for mobile layout */
       .lamp-ambient {
         bottom: 100px;
         width: 350px; /* Slightly narrower on mobile but still wide */
@@ -764,7 +729,6 @@
         filter: blur(10px); /* Maintain blur effect on mobile */
       }
       
-      /* Light effects on mobile */
       .lamp-light-top {
         width: 120px; /* Match desktop width */
         height: 80px; /* Match desktop height */
@@ -786,7 +750,7 @@
       }
     }
     
-    @media (max-width: 480px) {      
+    @media (max-width: 480px) {
       .name {
         font-size: 2.2rem;
       }
@@ -795,20 +759,7 @@
         font-size: 1rem;
         margin-top: 0.3rem;
       }
-      
-      /* Position lamp on left side */
-      
-      
-      /* Position table spanning across screen */
-     
 
-      /* Adjust table items container position for smaller mobile */
-      /* Apply gap to the container */
-      .table-items-container {
-        /* Removed gap: -10px; */
-      }
-
-      /* Target specific items for scaling */
       .table-items-container > #lamp-container,
       .table-items-container > .laptop,
       .table-items-container > .baseball-cap {
