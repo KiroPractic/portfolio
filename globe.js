@@ -278,8 +278,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Create a clean new globe instance
     const myGlobe = Globe()
-      .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
-      .backgroundColor(isLightMode ? 'rgba(255,255,255,0)' : 'rgba(30,30,30,0)')
+      .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
+      .backgroundColor(isLightMode ? 'rgba(255, 248, 240, 0)' : 'rgba(36, 28, 21, 0)') // Warm light/dark backgrounds
+      .atmosphereColor(isLightMode ? 'rgb(255, 250, 240)' : 'rgb(255, 240, 220)') // Warm white atmosphere
+      .atmosphereAltitude(0.25) // Adjust atmosphere size
       .width(globeElement.offsetWidth)
       .height(globeElement.offsetHeight)
       .polygonsData(countries)
@@ -298,8 +300,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           lat: 53.4, // Liverpool latitude
           lng: -2.99, // Liverpool longitude
           size: 26,  // Size of the icon (slightly larger)
-          color: isLightMode ? '#4682B4' : '#6495ED', // Blue to match visited countries
-          html: `<div style="color:${isLightMode ? '#4682B4' : '#6495ED'}; font-size: 28px; text-shadow: 0 0 3px rgba(0,0,0,0.3);">🎓</div>`,
+          color: isLightMode ? '#d97706' : '#f59e0b', // Changed to amber
+          html: `<div style="color:${isLightMode ? '#d97706' : '#f59e0b'}; font-size: 28px; text-shadow: 0 0 3px rgba(0,0,0,0.3);">🎓</div>`,
           altitude: 0.12 // Place well above the raised country polygon
         }
       ])
@@ -319,26 +321,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       .polygonCapColor(d => {
         if (!d.properties) return isLightMode ? 'rgba(200,200,200,0.4)' : 'rgba(50,50,50,0.4)';
         
-        // Try to get country code from properties
+        // Try to get country code and properties
         const code = d.properties.ISO_A3 || d.properties.ISO_A3_EH;
         const name = d.properties.name;
         
+        // Always treat French Guiana as unvisited
+        if (code === 'GUF' || name === 'French Guiana' || d.properties.visited === false) {
+          return isLightMode ? 'rgba(180,180,180,0.1)' : 'rgba(40,40,40,0.2)';
+        }
         
         if (code === homeCountryCode) {
-          // Croatia - home country (brighter red color)
-          return isLightMode ? 'rgba(220,20,60,0.8)' : 'rgba(255,69,0,0.8)'; // Crimson/OrangeRed
+          return isLightMode ? 'rgba(220,20,60,0.8)' : 'rgba(255,69,0,0.8)';
         } else if (visitedCountryMap[code]) {
-          // Visited countries (blue)
-          return isLightMode ? 'rgba(70,130,180,0.8)' : 'rgba(100,149,237,0.8)'; // SteelBlue/CornflowerBlue
+          return isLightMode ? 'rgba(217,119,6,0.8)' : 'rgba(245,158,11,0.8)';
         } else {
-          // Check by name as fallback
           if (name === 'United States' || name === 'Canada' || name === 'United Kingdom') {
-            return isLightMode ? 'rgba(70,130,180,0.8)' : 'rgba(100,149,237,0.8)';
+            return isLightMode ? 'rgba(217,119,6,0.8)' : 'rgba(245,158,11,0.8)';
           } else if (name === 'Croatia') {
             return isLightMode ? 'rgba(220,20,60,0.8)' : 'rgba(255,69,0,0.8)';
           }
-          
-          // Non-visited countries - more subtle transparent styling
           return isLightMode ? 'rgba(180,180,180,0.1)' : 'rgba(40,40,40,0.2)';
         }
       })
@@ -349,16 +350,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         const code = d.properties.ISO_A3 || d.properties.ISO_A3_EH;
         const name = d.properties.name;
         
+        // Exclude French Guiana
+        if (d.properties.ISO_A3 === 'GUF' || name === 'French Guiana') {
+          return 'rgba(100,100,100,0.03)';
+        }
+        
         if (code === homeCountryCode) {
           // Croatia - home country
           return isLightMode ? 'rgba(220,20,60,0.6)' : 'rgba(255,69,0,0.6)';
         } else if (visitedCountryMap[code]) {
           // Visited countries
-          return isLightMode ? 'rgba(70,130,180,0.5)' : 'rgba(100,149,237,0.5)';
+          return isLightMode ? 'rgba(217,119,6,0.5)' : 'rgba(245,158,11,0.5)';
         } else {
           // Check by name as fallback
           if (name === 'United States' || name === 'Canada' || name === 'United Kingdom') {
-            return isLightMode ? 'rgba(70,130,180,0.5)' : 'rgba(100,149,237,0.5)';
+            return isLightMode ? 'rgba(217,119,6,0.5)' : 'rgba(245,158,11,0.5)';
           } else if (name === 'Croatia') {
             return isLightMode ? 'rgba(220,20,60,0.6)' : 'rgba(255,69,0,0.6)';
           }
@@ -374,16 +380,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         const code = d.properties.ISO_A3 || d.properties.ISO_A3_EH;
         const name = d.properties.name;
         
+        // Exclude French Guiana
+        if (d.properties.ISO_A3 === 'GUF' || name === 'French Guiana') {
+          return isLightMode ? 'rgba(120,120,120,0.2)' : 'rgba(100,100,100,0.2)';
+        }
+        
         if (code === homeCountryCode) {
           // Croatia - home country
           return isLightMode ? '#b91c1c' : '#f87171'; // Darker/Lighter red
         } else if (visitedCountryMap[code]) {
           // Visited countries
-          return isLightMode ? '#4682B4' : '#6495ED';
+          return isLightMode ? '#d97706' : '#f59e0b';
         } else {
           // Check by name as fallback
           if (name === 'United States' || name === 'Canada' || name === 'United Kingdom') {
-            return isLightMode ? '#4682B4' : '#6495ED';
+            return isLightMode ? '#d97706' : '#f59e0b';
           } else if (name === 'Croatia') {
             return isLightMode ? '#b91c1c' : '#f87171';
           }
@@ -423,6 +434,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const name = d.name || d.NAME || d.ADMIN || 'Unknown';
         const code = d.ISO_A3 || d.ISO_A3_EH;
         
+        // Exclude French Guiana from labels
+        if (code === 'GUF' || name === 'French Guiana') {
+          return null;
+        }
+        
         // Only show labels for home country and visited countries
         if (code === homeCountryCode || name === 'Croatia') {
           // Home country
@@ -435,7 +451,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                    name === 'Monaco' || name === 'Bosnia and Herzegovina' || name === 'Serbia' || 
                    name === 'Hungary' || name === 'San Marino' || name === 'Spain' || name === 'Greece') {
           // Visited country
-          return `<div style="color:white;background-color:rgba(70,130,180,0.9);padding:5px 8px;border-radius:3px;">
+          return `<div style="color:white;background-color:rgba(217,119,6,0.9);padding:5px 8px;border-radius:3px;">
             ${name} - Click to see details
           </div>`;
         }
@@ -553,7 +569,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Watch for theme changes
     new MutationObserver(() => {
       isLightMode = !document.body.classList.contains('dark');
-      myGlobe.backgroundColor(isLightMode ? 'rgba(255,255,255,0)' : 'rgba(30,30,30,0)');
+      myGlobe.backgroundColor(isLightMode ? 'rgba(255, 248, 240, 0)' : 'rgba(36, 28, 21, 0)');
+      myGlobe.atmosphereColor(isLightMode ? 'rgb(255, 250, 240)' : 'rgb(255, 240, 220)');
       
       // Update icons when theme changes
       myGlobe.htmlElementsData([
@@ -569,8 +586,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           lat: 53.4, // Liverpool latitude
           lng: -2.99, // Liverpool longitude
           size: 26,  // Size of the icon (slightly larger)
-          color: isLightMode ? '#4682B4' : '#6495ED',
-          html: `<div style="color:${isLightMode ? '#4682B4' : '#6495ED'}; font-size: 28px; text-shadow: 0 0 3px rgba(0,0,0,0.3);">🎓</div>`,
+          color: isLightMode ? '#d97706' : '#f59e0b',
+          html: `<div style="color:${isLightMode ? '#d97706' : '#f59e0b'}; font-size: 28px; text-shadow: 0 0 3px rgba(0,0,0,0.3);">🎓</div>`,
           altitude: 0.12 // Place well above the raised country polygon
         }
       ]);
@@ -579,22 +596,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       myGlobe.polygonCapColor(d => {
         if (!d.properties) return isLightMode ? 'rgba(200,200,200,0.4)' : 'rgba(50,50,50,0.4)';
         
-        // Try to get country code from properties
+        // Try to get country code and properties
         const code = d.properties.ISO_A3 || d.properties.ISO_A3_EH;
         const name = d.properties.name;
         
-        // Debug info for selected countries to help troubleshoot
-        if ((name === 'United States' || name === 'Canada' || name === 'United Kingdom' || name === 'Croatia' || name === 'Portugal') ||
-            (code === 'USA' || code === 'CAN' || code === 'GBR' || code === 'HRV' || code === 'PRT')) {
+        // Always treat French Guiana as unvisited
+        if (code === 'GUF' || name === 'French Guiana' || d.properties.visited === false) {
+          return isLightMode ? 'rgba(180,180,180,0.1)' : 'rgba(40,40,40,0.2)';
         }
         
-        if (code === homeCountryCode || name === 'Croatia') {
-          // Croatia - home country (brighter red color)
+        if (code === homeCountryCode) {
           return isLightMode ? 'rgba(220,20,60,0.8)' : 'rgba(255,69,0,0.8)';
-        } else if (visitedCountryMap[code] || name === 'United States' || name === 'Canada' || name === 'United Kingdom' || name === 'Portugal') {
-          // Visited countries (blue)
-          return isLightMode ? 'rgba(70,130,180,0.8)' : 'rgba(100,149,237,0.8)';
+        } else if (visitedCountryMap[code]) {
+          return isLightMode ? 'rgba(217,119,6,0.8)' : 'rgba(245,158,11,0.8)';
         } else {
+          if (name === 'United States' || name === 'Canada' || name === 'United Kingdom') {
+            return isLightMode ? 'rgba(217,119,6,0.8)' : 'rgba(245,158,11,0.8)';
+          } else if (name === 'Croatia') {
+            return isLightMode ? 'rgba(220,20,60,0.8)' : 'rgba(255,69,0,0.8)';
+          }
           return isLightMode ? 'rgba(180,180,180,0.1)' : 'rgba(40,40,40,0.2)';
         }
       });
@@ -606,12 +626,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const code = d.properties.ISO_A3 || d.properties.ISO_A3_EH;
         const name = d.properties.name;
         
-        if (code === homeCountryCode || name === 'Croatia') {
+        // Exclude French Guiana
+        if (d.properties.ISO_A3 === 'GUF' || name === 'French Guiana') {
+          return 'rgba(100,100,100,0.03)';
+        }
+        
+        if (code === homeCountryCode) {
           // Croatia - home country
           return isLightMode ? 'rgba(220,20,60,0.6)' : 'rgba(255,69,0,0.6)';
-        } else if (visitedCountryMap[code] || name === 'United States' || name === 'Canada' || name === 'United Kingdom' || name === 'Portugal') {
+        } else if (visitedCountryMap[code]) {
           // Visited countries
-          return isLightMode ? 'rgba(70,130,180,0.5)' : 'rgba(100,149,237,0.5)';
+          return isLightMode ? 'rgba(217,119,6,0.5)' : 'rgba(245,158,11,0.5)';
         } else {
           // Almost transparent sides for non-visited countries
           return 'rgba(100,100,100,0.03)';
@@ -625,12 +650,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const code = d.properties.ISO_A3 || d.properties.ISO_A3_EH;
         const name = d.properties.name;
         
+        // Exclude French Guiana
+        if (d.properties.ISO_A3 === 'GUF' || name === 'French Guiana') {
+          return isLightMode ? 'rgba(120,120,120,0.2)' : 'rgba(100,100,100,0.2)';
+        }
+        
         if (code === homeCountryCode || name === 'Croatia') {
           // Croatia - home country
           return isLightMode ? '#b91c1c' : '#f87171';
         } else if (visitedCountryMap[code] || name === 'United States' || name === 'Canada' || name === 'United Kingdom' || name === 'Portugal') {
           // Visited countries
-          return isLightMode ? '#4682B4' : '#6495ED';
+          return isLightMode ? '#d97706' : '#f59e0b';
         } else {
           // Very subtle strokes for non-visited countries
           return isLightMode ? 'rgba(120,120,120,0.2)' : 'rgba(100,100,100,0.2)';
@@ -718,7 +748,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else if (country.code === 'GBR') {
         // Special title for UK with graduation cap
         popupTitle.textContent = country.name + ' 🎓';
-        popupTitle.style.color = isLightMode ? '#4682B4' : '#6495ED';
+        popupTitle.style.color = isLightMode ? '#d97706' : '#f59e0b';
       } else {
         popupTitle.textContent = country.name;
         popupTitle.style.color = '';
@@ -802,9 +832,43 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const response = await fetch('https://unpkg.com/world-atlas@2.0.2/countries-110m.json');
         const data = await response.json();
-        const features = topojson.feature(data, data.objects.countries).features;
+        let features = topojson.feature(data, data.objects.countries).features;
         
-        
+        // Filter out French Guiana by coordinates
+        features = features.map(feature => {
+          if (feature.properties && feature.properties.name === 'France') {
+            // Create a new feature with filtered coordinates
+            // French Guiana is roughly between -55 and -51 longitude
+            // and between 2 and 6 latitude
+            return {
+              ...feature,
+              geometry: {
+                ...feature.geometry,
+                coordinates: feature.geometry.coordinates.map(polygon => {
+                  if (Array.isArray(polygon)) {
+                    return polygon.filter(coords => {
+                      // Filter out coordinates that are in French Guiana's bounding box
+                      if (Array.isArray(coords[0])) {
+                        // Handle MultiPolygon
+                        return coords.every(point => {
+                          const [lon, lat] = point;
+                          return !(lon >= -55 && lon <= -51 && lat >= 2 && lat <= 6);
+                        });
+                      } else {
+                        // Handle Polygon
+                        const [lon, lat] = coords;
+                        return !(lon >= -55 && lon <= -51 && lat >= 2 && lat <= 6);
+                      }
+                    });
+                  }
+                  return polygon;
+                }).filter(poly => poly.length > 0) // Remove empty polygons
+              }
+            };
+          }
+          return feature;
+        });
+
         // Create a mapping from country names to our country codes
         const nameToCodeMap = {
           'United States of America': 'USA',
@@ -831,17 +895,18 @@ document.addEventListener('DOMContentLoaded', async () => {
           'Greece': 'GRC'
         };
         
-        // Add our codes to the properties for easier lookup
-        features.forEach(feature => {
+        // Process features before returning
+        const processedFeatures = features.map(feature => {
           if (feature.properties && feature.properties.name) {
             const countryName = feature.properties.name;
             if (nameToCodeMap[countryName]) {
               feature.properties.ISO_A3 = nameToCodeMap[countryName];
             }
           }
+          return feature;
         });
         
-        return features;
+        return processedFeatures;
       } catch (error) {
         console.error("Error fetching country data:", error);
         return [];
