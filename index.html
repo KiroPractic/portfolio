@@ -1191,6 +1191,48 @@
       position: relative; /* Needed for absolute positioning of icon */
     }
 
+    /* Activity Icon Overlay */
+    .activity-icon-overlay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      pointer-events: none;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      overflow: hidden;
+      opacity: 0.1;
+    }
+
+    .strava-activity-type-icon-bg {
+      font-size: 180px; /* Make the icon very large */
+      margin-right: -20px; /* Pull slightly to the right */
+      color: currentColor;
+      transform: translateX(15%); /* Move 15% of its width to the right */
+    }
+
+    /* Ensure content stays above the overlay */
+    .strava-activity-card-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Adjust overlay for cards with background images */
+    .strava-activity-card.has-background-image .activity-icon-overlay {
+      opacity: 0.15; /* Slightly more visible on image backgrounds */
+    }
+
+    body.dark .activity-icon-overlay {
+      opacity: 0.15; /* Slightly more visible in dark mode */
+    }
+
+    body.dark .strava-activity-card.has-background-image .activity-icon-overlay {
+      opacity: 0.2; /* Even more visible on dark mode with image backgrounds */
+    }
+
     body.dark .strava-activity-card {
       background-color: #222;
       box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
@@ -1373,19 +1415,8 @@
         gap: 5px; /* Space between icon and text */
     }
 
-    /* Activity Type Icon Styles (when inline with title) */
-    .strava-activity-card-content h3 .strava-activity-type-icon {
-        font-size: 0.9em; /* Slightly smaller than title */
-        margin-right: 8px; /* Space between icon and title text */
-        color: #888; /* Match other icons */
-        vertical-align: middle; /* Align with text */
-    }
+    /* Remove old activity icon styles */
 
-    body.dark .strava-activity-card-content h3 .strava-activity-type-icon {
-        color: #aaa;
-    }
-
-    /* Style Flickity buttons for dark mode */
     body.dark .flickity-prev-next-button {
       background: rgba(255, 255, 255, 0.1);
     }

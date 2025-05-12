@@ -74,7 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     const cardDiv = document.createElement('div');
                     cardDiv.classList.add('strava-activity-card');
 
-                    const date = new Date(activity.start_date_local).toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+                    // Use the activity's local time directly without timezone conversion
+                    const activityDate = new Date(activity.start_date_local);
+                    const date = activity.start_date_local.replace(/[TZ]/g, ' ').substring(0, 16); // Format: "YYYY-MM-DD HH:mm"
+                    // Format the date part separately for better readability
+                    const formattedDate = new Date(activity.start_date_local).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    // Extract time part from the original string (it's already in local activity timezone)
+                    const timeStr = date.split(' ')[1];
+                    const finalDate = `${formattedDate} ${timeStr}`;
+
                     const distance = (activity.distance / 1000).toFixed(2); // km
                     const movingTimeFormatted = formatSecondsToHMS(activity.moving_time);
                     const elevation = activity.total_elevation_gain.toFixed(0); // meters
@@ -152,10 +164,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Always add the content div
                     cardHTML = `
-                        
+                        <div class="activity-icon-overlay">
+                            <i class="strava-activity-type-icon-bg ${iconClass}" title="${activity.type}"></i>
+                        </div>
                         <div class="strava-activity-card-content">
-                            <h3>${activityIconHTML}<a href="https://www.strava.com/activities/${activity.id}" target="_blank" rel="noopener noreferrer">${activity.name}</a></h3>
-                            <p>${date}</p>
+                            <h3><a href="https://www.strava.com/activities/${activity.id}" target="_blank" rel="noopener noreferrer">${activity.name}</a></h3>
+                            <p>${finalDate}</p>
                             <div class="strava-stats-container">
                                 <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-ruler-horizontal"></i></span> ${distance} km</span>
                                 <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-stopwatch"></i></span> ${movingTimeFormatted}</span>
