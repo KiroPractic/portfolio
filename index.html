@@ -1424,6 +1424,412 @@
     body.dark .flickity-prev-next-button:hover {
       background: rgba(255, 255, 255, 0.2);
     }
+
+    /* GitHub Contributions Graph Styles */
+    #github-contribution-graph-container {
+      margin: 20px auto 40px;
+      padding: 20px;
+      max-width: 800px; /* Adjust as needed */
+      text-align: center;
+      border: 1px solid #e1e4e8;
+      border-radius: 8px;
+      background-color: #f5f5f5;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box; /* Ensure padding is included in width */
+      width: 90%; /* Use percentage instead of calc for better responsiveness */
+    }
+    
+    .github-section-title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 90%;
+    }
+    
+    body.dark .github-section-title {
+      color: #eee;
+    }
+    
+    body.dark #github-contribution-graph-container {
+      border-color: #30363d;
+      background-color: #222;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+      #github-contribution-graph-container {
+        margin: 30px auto;
+        padding: 15px;
+        width: 92%; /* Slightly wider on medium screens */
+        max-width: 100%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      #github-contribution-graph-container {
+        margin: 20px auto;
+        padding: 12px;
+        width: 94%; /* Even wider on small screens to maintain proper margins */
+      }
+    }
+    
+    /* GitHub Header and Avatar Styles */
+    .github-profile-section {
+      margin-bottom: 20px;
+    }
+    
+    .github-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .github-avatar-container {
+      margin-right: 15px;
+    }
+    
+    .github-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    body.dark .github-avatar {
+      border-color: #333;
+    }
+    
+    .github-username-title {
+      margin: 0;
+      font-size: 1.8em;
+    }
+    
+    .github-username-title a {
+      color: #333;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .github-username-title a:hover {
+      color: #4682B4;
+    }
+    
+    body.dark .github-username-title a {
+      color: #eee;
+    }
+    
+    body.dark .github-username-title a:hover {
+      color: #6495ED;
+    }
+    
+    /* GitHub Stats Styles */
+    .github-stats {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+      gap: 30px;
+    }
+    
+    .github-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .github-stat-value {
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    body.dark .github-stat-value {
+      color: #eee;
+    }
+    
+    .github-stat-label {
+      font-size: 0.9em;
+      color: #586069;
+    }
+    
+    body.dark .github-stat-label {
+      color: #aaa;
+    }
+    
+    /* For large screens - profile elements in one row */
+    @media (min-width: 992px) {
+      .github-profile-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+      }
+      
+      .github-header {
+        margin-bottom: 0;
+        width: auto;
+        justify-content: flex-start;
+      }
+      
+      .github-stats {
+        margin-bottom: 0;
+        width: auto;
+      }
+    }
+    
+    /* Mobile Responsiveness for GitHub section */
+    @media (max-width: 768px) {
+      .github-header {
+        flex-direction: column;
+      }
+      
+      .github-avatar-container {
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+      
+      .github-stats {
+        flex-wrap: wrap;
+        gap: 20px 30px;
+      }
+    }
+    
+    /* GitHub README Styles */
+    .github-readme-container {
+      margin-bottom: 25px;
+    }
+    
+    .github-readme {
+      border: 1px solid #e1e4e8;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      overflow: hidden;
+    }
+    
+    body.dark .github-readme {
+      border-color: #30363d;
+      background-color: #2d333b;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+    }
+    
+    .github-readme-title {
+      margin: 0;
+      padding: 12px 15px;
+      background-color: #f1f1f1;
+      border-bottom: 1px solid #e1e4e8;
+      font-size: 1.1em;
+      color: #333;
+    }
+    
+    body.dark .github-readme-title {
+      background-color: #333;
+      border-color: #444;
+      color: #eee;
+    }
+    
+    .github-readme-content {
+      padding: 15px;
+      color: #333;
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+    
+    body.dark .github-readme-content {
+      color: #ddd;
+    }
+    
+    .github-readme-content h3,
+    .github-readme-content h4,
+    .github-readme-content h5 {
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+    }
+    
+    .github-readme-content a {
+      color: #4682B4;
+      text-decoration: none;
+    }
+    
+    .github-readme-content a:hover {
+      text-decoration: underline;
+    }
+    
+    body.dark .github-readme-content a {
+      color: #6495ED;
+    }
+    
+    .github-readme-content pre {
+      background-color: #f6f8fa;
+      border-radius: 6px;
+      padding: 10px;
+      overflow-x: auto;
+    }
+    
+    body.dark .github-readme-content pre {
+      background-color: #2d333b;
+    }
+    
+    .github-readme-content code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.9em;
+    }
+    
+    /* GitHub Graph Styles */
+    .github-graph {
+      border-top: 1px solid #e1e4e8;
+      padding-top: 20px;
+      margin-top: 10px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+    }
+    
+    body.dark .github-graph {
+      border-color: #30363d;
+    }
+    
+    .github-graph-loading {
+      color: #586069;
+      font-size: 1em;
+      padding: 20px;
+    }
+    
+    body.dark .github-graph-loading {
+      color: #c9d1d9;
+    }
+    
+    .contrib-calendar-container {
+      display: flex;
+      overflow-x: auto; 
+      padding-bottom: 5px;
+    }
+    
+    .contrib-week {
+      display: flex;
+      flex-direction: column;
+      margin-right: 2px;
+    }
+    
+    .contrib-week:last-child {
+      margin-right: 0;
+    }
+    
+    .contrib-day {
+      width: 11px;
+      height: 11px;
+      margin: 1px 0;
+      border-radius: 2px;
+      background-color: #ebedf0;
+      position: relative;
+    }
+    
+    body.dark .contrib-day {
+      background-color: #161b22;
+    }
+    
+    .contrib-day-tooltip {
+      visibility: hidden;
+      width: max-content;
+      background-color: #24292e;
+      color: #ffffff;
+      text-align: center;
+      border-radius: 4px;
+      padding: 5px 8px;
+      position: absolute;
+      z-index: 100;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+      font-size: 12px;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    
+    .contrib-day:hover .contrib-day-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    body.dark .contrib-day-tooltip {
+      background-color: #c9d1d9;
+      color: #1f2328;
+    }
+    
+    /* Total contributions text */
+    .github-total-contributions {
+      color: #333;
+    }
+    
+    body.dark .github-total-contributions {
+      color: #eee;
+    }
+    
+    /* Scrollbar styles for contributions */
+    /* Light mode scrollbars */
+    .github-weeks-container::-webkit-scrollbar,
+    .github-months-scroller::-webkit-scrollbar,
+    .contrib-calendar-container::-webkit-scrollbar,
+    .github-graph::-webkit-scrollbar {
+      height: 8px;
+      background-color: #f1f1f1 !important;
+    }
+    
+    .github-weeks-container::-webkit-scrollbar-thumb,
+    .github-months-scroller::-webkit-scrollbar-thumb,
+    .contrib-calendar-container::-webkit-scrollbar-thumb,
+    .github-graph::-webkit-scrollbar-thumb {
+      background-color: #c1c1c1 !important;
+      border-radius: 4px;
+    }
+    
+    .github-weeks-container::-webkit-scrollbar-thumb:hover,
+    .github-months-scroller::-webkit-scrollbar-thumb:hover,
+    .contrib-calendar-container::-webkit-scrollbar-thumb:hover,
+    .github-graph::-webkit-scrollbar-thumb:hover {
+      background-color: #a8a8a8 !important;
+    }
+    
+    /* Dark mode scrollbar - with higher specificity */
+    body.dark .github-weeks-container::-webkit-scrollbar,
+    body.dark .github-months-scroller::-webkit-scrollbar,
+    body.dark .contrib-calendar-container::-webkit-scrollbar,
+    body.dark .github-graph::-webkit-scrollbar {
+      background-color: #222222 !important;
+    }
+    
+    body.dark .github-weeks-container::-webkit-scrollbar-thumb,
+    body.dark .github-months-scroller::-webkit-scrollbar-thumb,
+    body.dark .contrib-calendar-container::-webkit-scrollbar-thumb,
+    body.dark .github-graph::-webkit-scrollbar-thumb {
+      background-color: #383838 !important;
+    }
+    
+    body.dark .github-weeks-container::-webkit-scrollbar-thumb:hover,
+    body.dark .github-months-scroller::-webkit-scrollbar-thumb:hover,
+    body.dark .contrib-calendar-container::-webkit-scrollbar-thumb:hover,
+    body.dark .github-graph::-webkit-scrollbar-thumb:hover {
+      background-color: #444444 !important;
+    }
+    
+    /* Firefox scrollbar styling */
+    .github-graph {
+      scrollbar-width: thin;
+      scrollbar-color: #c1c1c1 #f1f1f1;
+    }
+    
+    body.dark .github-graph {
+      scrollbar-color: #383838 #222222;
+    }
   </style>
 </head>
 <body class="dark">
@@ -1462,6 +1868,30 @@
     </div>
   </div>
   
+  <!-- GitHub section -->
+  <h2 class="github-section-title">GitHub Profile</h2>
+  <div id="github-contribution-graph-container">
+    <div class="github-profile-section">
+      <div class="github-header">
+        <div class="github-avatar-container">
+          <!-- GitHub avatar will be rendered here by JavaScript -->
+        </div>
+        <div class="github-title-container">
+          <!-- GitHub username with link will be added here -->
+        </div>
+      </div>
+      <div class="github-stats">
+        <!-- GitHub stats will be rendered here by JavaScript -->
+      </div>
+    </div>
+    <div id="github-readme-container" class="github-readme-container">
+      <!-- GitHub README content will be rendered here by JavaScript -->
+    </div>
+    <div class="github-graph" id="github-graph-render-area">
+      <p class="github-graph-loading">Loading GitHub contributions...</p>
+    </div>
+  </div>
+
   <!-- Timeline section -->
   <div class="timeline-container">
     <h2 class="timeline-title">Career Path</h2>
@@ -1568,11 +1998,12 @@
     </div>
   </div>
 
-  <script src="lamp.js"></script>
-  <script src="laptop.js"></script>
-  <script src="cap.js"></script>
-  <script src="globe.js"></script>
+  <script src="./lamp.js" type="module"></script>
+  <script src="./globe.js" type="module"></script>
+  <script src="./laptop.js" type="module"></script>
+  <script src="./cap.js" type="module"></script>
   <script src="timeline.js"></script>
+  <script src="github-display.js"></script>
   <script>
     // Set current year in footer
     document.getElementById('current-year').textContent = new Date().getFullYear();
