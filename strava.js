@@ -20,6 +20,20 @@ function formatSecondsToHMS(totalSeconds) {
     return result.trim(); // Remove trailing space if only seconds
 }
 
+// Helper function to format pace (minutes per km) from meters per second
+function formatPaceFromSpeed(metersPerSecond) {
+    if (isNaN(metersPerSecond) || metersPerSecond <= 0) {
+        return 'N/A';
+    }
+    
+    // Convert meters per second to seconds per kilometer
+    const secondsPerKm = 1000 / metersPerSecond;
+    const paceMinutes = Math.floor(secondsPerKm / 60);
+    const remainingSeconds = Math.floor(secondsPerKm % 60);
+    
+    return `${paceMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}/km`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const carouselElement = document.querySelector('.strava-carousel'); // Target Flickity container
     const loadingMessage = document.getElementById('strava-loading');
@@ -94,6 +108,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     const calories = activity.calories ? activity.calories.toFixed(0) : null;
                     const avgHeartrate = activity.average_heartrate ? activity.average_heartrate.toFixed(0) : null;
                     const kudos = activity.kudos_count;
+                    
+                    // Calculate pace for running activities
+                    let pace = null;
+                    if (['Run', 'VirtualRun', 'TrailRun'].includes(activity.type)) {
+                        // Use Strava's average_speed (in meters/second)
+                        pace = formatPaceFromSpeed(activity.average_speed);
+                    }
 
                     let cardHTML = '';
                     let activityIconHTML = '';
@@ -173,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="strava-stats-container">
                                 <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-ruler-horizontal"></i></span> ${distance} km</span>
                                 <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-stopwatch"></i></span> ${movingTimeFormatted}</span>
+                                ${pace ? `<span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-gauge-high"></i></span> ${pace}</span>` : ''}
                                 <span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-mountain"></i></span> ${elevation} m</span>
                                 ${calories ? `<span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-fire-flame-curved"></i></span> ${calories} kcal</span>` : ''}
                                 ${avgHeartrate ? `<span class="strava-stat"><span class="stat-icon"><i class="fa-solid fa-heart-pulse"></i></span> ${avgHeartrate} bpm avg</span>` : ''}
