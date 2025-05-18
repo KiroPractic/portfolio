@@ -1830,6 +1830,31 @@
     body.dark .github-graph {
       scrollbar-color: #383838 #222222;
     }
+
+    /* WSPay logo contrast in dark mode */
+    body.dark #wspay-logo-container {
+      position: relative; /* Ensure z-index context for pseudo-element */
+      display: inline-block; /* Or block, depending on desired layout with other elements if any */
+    }
+
+    body.dark #wspay-logo-container::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: calc(100% + 20px); /* A bit wider than the logo itself */
+      height: calc(100% + 20px); /* A bit taller than the logo itself */
+      background: radial-gradient(ellipse at center, rgba(220, 220, 220, 0.3) 0%, rgba(200, 200, 200, 0) 70%);
+      /* border-radius: 50%; Removed to match logo shape */
+      z-index: 0; /* Behind the image */
+      pointer-events: none;
+    }
+
+    body.dark #wspay-logo-container img {
+      position: relative; /* Ensure image can have its own z-index */
+      z-index: 1; /* Above the pseudo-element */
+    }
   </style>
 </head>
 <body class="dark">
@@ -1909,7 +1934,7 @@
         <div class="timeline-item-content">
           <div class="timeline-date">Mar 2023 - Present</div>
           <div class="timeline-logos" style="margin-bottom: 10px;">
-            <img src="KupujOnlineLogo.png" alt="Kupuj Online Logo" style="height: 6em; margin-right: 5px; vertical-align: middle;">
+            <img src="KupujOnlineLogo.png" alt="Kupuj Online Logo" style="max-height: 5em; max-width: 100%; width: auto; height: auto; margin-right: 5px; vertical-align: middle;">
           </div>
           <h3 class="timeline-item-title"><a href="https://www.kupujonline.com/en/home/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: orange;">Kupuj Online</a> - .NET Developer & Team Lead</h3>
           
@@ -1920,8 +1945,8 @@
       <div class="timeline-item">
         <div class="timeline-item-content">
           <div class="timeline-date">Jun 2021 - Mar 2023</div>
-          <div class="timeline-logos" style="margin-bottom: 10px;">
-            <img src="WSPay-logo.png" alt="Web Studio Logo" style="height: 6em; margin-right: 5px; vertical-align: middle;">
+          <div class="timeline-logos" id="wspay-logo-container" style="margin-bottom: 10px;">
+            <img src="WSPay-logo.png" alt="Web Studio Logo" style="max-height: 5em; max-width: 100%; width: auto; height: auto; margin-right: 5px; vertical-align: middle;">
           </div>
           <h3 class="timeline-item-title"><a href="https://www.wspay.eu/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: orange;">Web Studio</a> - Junior .NET Developer</h3>
           
@@ -1933,7 +1958,7 @@
         <div class="timeline-item-content">
           <div class="timeline-date">2017 - 2021</div>
           <div class="timeline-logos" style="margin-bottom: 10px;">
-            <img src="UoL-logo.png" alt="University of Liverpool Logo" style="height: 6em; margin-right: 5px; vertical-align: middle;">
+            <img src="UoL-logo.png" alt="University of Liverpool Logo" style="max-height: 5em; max-width: 100%; width: auto; height: auto; margin-right: 5px; vertical-align: middle;">
           </div>
           <h3 class="timeline-item-title"><a href="https://www.liverpool.ac.uk/computer-science/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: orange;">University of Liverpool</a> - MEng Computer Science</h3>
           <p>First class with honours.</p>
