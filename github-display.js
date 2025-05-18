@@ -209,6 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
         overallGraphLayout.style.width = '100%';
         overallGraphLayout.style.position = 'relative'; // Add positioning context
         overallGraphLayout.style.overflowY = 'visible'; // Allow tooltip overflow
+        overallGraphLayout.style.position = 'relative'; // Add positioning context
+        overallGraphLayout.style.overflowY = 'visible'; // Allow tooltip overflow
 
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const monthLabelElements = [];
@@ -269,6 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mainGraphRow.style.display = 'flex';
         mainGraphRow.style.position = 'relative'; // Add positioning context
         mainGraphRow.style.overflowY = 'visible'; // Allow tooltip overflow
+        mainGraphRow.style.position = 'relative'; // Add positioning context
+        mainGraphRow.style.overflowY = 'visible'; // Allow tooltip overflow
 
         const dayLabels = ['', 'M', '', 'W', '', 'F', ''];
         const dayLabelContainer = document.createElement('div');
@@ -293,12 +297,16 @@ document.addEventListener('DOMContentLoaded', () => {
         weeksRenderContainer.style.display = 'flex';
         weeksRenderContainer.style.overflowX = 'auto';
         weeksRenderContainer.style.overflowY = 'visible'; // Allow tooltips to overflow vertically
+        weeksRenderContainer.style.overflowY = 'visible'; // Allow tooltips to overflow vertically
         weeksRenderContainer.style.flexGrow = '1';
         weeksRenderContainer.className = 'github-weeks-container';
+        weeksRenderContainer.style.position = 'relative'; // Establish positioning context
         weeksRenderContainer.style.position = 'relative'; // Establish positioning context
 
         reversedWeeks.forEach((week) => {
             const weekDiv = document.createElement('div');
+            weekDiv.className = 'contrib-week';
+            
             weekDiv.className = 'contrib-week';
             
             const daysInWeek = Array(7).fill(null);
@@ -311,14 +319,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dayDiv = document.createElement('div');
                 dayDiv.className = 'contrib-day';
                 
+                
                 if (dayData) {
                     // Create tooltip first, as it's always associated with dayDiv
                     const tooltip = document.createElement('div');
                     tooltip.className = 'contrib-day-tooltip';
+                    
                     const count = dayData.contributionCount;
                     const date = new Date(dayData.date);
                     const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                     tooltip.textContent = `${count} contribution${count === 1 ? '' : 's'} on ${formattedDate}`;
+                    
                     dayDiv.appendChild(tooltip);
 
                     if (dayData.contributionCount > 0) {
