@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
       height: var(--cap-height);
       z-index: 2001; /* Keep z-index relative to siblings */
       
-      background-image: url('cap.png');
+      background-image: url('./assets/images/cap.png');
       background-size: contain; 
       background-position: bottom center; 
       background-repeat: no-repeat;

@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isDarkMode) {
       laptopScreen.style.backgroundImage = "url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeng5dHkyZmVkbjFoZnZ2N2h0b294MHNuNndpZWs4MWMybzI4M2gyYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V4NSR1NG2p0KeJJyr5/giphy.gif')";
     } else {
-      laptopScreen.style.backgroundImage = "url('windows_xp.gif')";
+      laptopScreen.style.backgroundImage = "url('./assets/images/windows_xp.gif')";
     }
   };
   
