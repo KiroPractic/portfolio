@@ -412,13 +412,28 @@ document.addEventListener('DOMContentLoaded', () => {
         mainGraphRow.appendChild(weeksRenderContainer);
 
         // Animate the contribution day flyers into view
-        const animatedFlyers = weeksRenderContainer.querySelectorAll('.contrib-day-flyer');
-        animatedFlyers.forEach((flyerDiv, index) => {
-            setTimeout(() => {
-                flyerDiv.style.opacity = '1';
-                flyerDiv.style.transform = 'translateX(0)';
-            }, index * 10); // Stagger the animation slightly
+        // const animatedFlyers = weeksRenderContainer.querySelectorAll('.contrib-day-flyer');
+        // animatedFlyers.forEach((flyerDiv, index) => {
+        //     setTimeout(() => {
+        //         flyerDiv.style.opacity = '1';
+        //         flyerDiv.style.transform = 'translateX(0)';
+        //     }, index * 10); // Stagger the animation slightly
+        // });
+
+        // Set up IntersectionObserver to animate flyers when visible
+        const observer = new IntersectionObserver((entries, observerInstance) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateContributionFlyers(weeksRenderContainer);
+                    observerInstance.unobserve(entry.target); // Animate only once
+                }
+            });
+        }, {
+            threshold: 0.1, // Trigger when 10% of the element is visible
+            rootMargin: '0px 0px -50px 0px' // Adjust as needed
         });
+
+        observer.observe(weeksRenderContainer);
 
         weeksRenderContainer.addEventListener('scroll', () => {
             monthLabelsScroller.scrollLeft = weeksRenderContainer.scrollLeft;
@@ -436,6 +451,16 @@ document.addEventListener('DOMContentLoaded', () => {
         totalContributionsText.style.textAlign = 'right'; 
         totalContributionsText.style.paddingRight = '10px';
         container.appendChild(totalContributionsText);
+    }
+
+    function animateContributionFlyers(containerElement) {
+        const animatedFlyers = containerElement.querySelectorAll('.contrib-day-flyer');
+        animatedFlyers.forEach((flyerDiv, index) => {
+            setTimeout(() => {
+                flyerDiv.style.opacity = '1';
+                flyerDiv.style.transform = 'translateX(0)';
+            }, index * 10); // Stagger the animation slightly
+        });
     }
 
     fetchGitHubData();
