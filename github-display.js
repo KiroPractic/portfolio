@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const graphRenderArea = document.getElementById('github-graph-render-area');
     const loadingMessage = graphRenderArea.querySelector('.github-graph-loading');
 
+    if (loadingMessage) {
+        loadingMessage.textContent = 'Loading GitHub stats...';
+    }
+
     // Single set of balanced colors that work well in both light and dark themes
     const contributionColors = {
         // No mapping for #ebedf0 here, CSS will handle 0-contribution days
@@ -10,6 +14,76 @@ document.addEventListener('DOMContentLoaded', () => {
         '#30a14e': '#D35400', // Level 3 - darker orange
         '#216e39': '#BA4A00'  // Level 4 - deep orange/amber
     };
+
+    // Add styles to document head
+    const githubStyles = document.createElement('style');
+    githubStyles.id = 'github-contrib-styles';
+    githubStyles.textContent = `
+        .contrib-day-tooltip {
+            position: absolute;
+            padding: 8px 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 400;
+            line-height: 1.5;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease-in-out;
+            z-index: 100;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+            background-color: #ffffff;
+            color: #24292f;
+            border: 1px solid #d0d7de;
+        }
+
+        .contrib-day {
+            position: relative;
+            width: 11px;
+            height: 11px;
+            margin: 1px;
+            border-radius: 2px;
+        }
+
+        .contrib-day:not([style*="background-color"]) {
+            background-color: #ebedf0;
+        }
+
+        .contrib-week {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Dark theme styles */
+        body.dark .contrib-day-tooltip {
+            background-color: #2d333b;
+            color: #e6edf3;
+            border: 1px solid #444c56;
+        }
+
+        body.dark .contrib-day:not([style*="background-color"]) {
+            background-color: #161b22;
+        }
+
+        .contrib-day-flyer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 2px;
+            opacity: 0;
+            transform: translateX(-100vw);
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+            z-index: 1;
+        }
+    `;
+    document.head.appendChild(githubStyles);
 
     async function fetchGitHubData() {
         try {
@@ -133,6 +207,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const overallGraphLayout = document.createElement('div');
         overallGraphLayout.style.width = '100%';
+        overallGraphLayout.style.position = 'relative'; // Add positioning context
+        overallGraphLayout.style.overflowY = 'visible'; // Allow tooltip overflow
 
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const monthLabelElements = [];
@@ -191,6 +267,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const mainGraphRow = document.createElement('div');
         mainGraphRow.style.display = 'flex';
+        mainGraphRow.style.position = 'relative'; // Add positioning context
+        mainGraphRow.style.overflowY = 'visible'; // Allow tooltip overflow
 
         const dayLabels = ['', 'M', '', 'W', '', 'F', ''];
         const dayLabelContainer = document.createElement('div');
@@ -214,13 +292,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const weeksRenderContainer = document.createElement('div');
         weeksRenderContainer.style.display = 'flex';
         weeksRenderContainer.style.overflowX = 'auto';
+        weeksRenderContainer.style.overflowY = 'visible'; // Allow tooltips to overflow vertically
         weeksRenderContainer.style.flexGrow = '1';
         weeksRenderContainer.className = 'github-weeks-container';
+        weeksRenderContainer.style.position = 'relative'; // Establish positioning context
 
         reversedWeeks.forEach((week) => {
             const weekDiv = document.createElement('div');
-            weekDiv.className = 'contrib-week'; 
-
+            weekDiv.className = 'contrib-week';
+            
             const daysInWeek = Array(7).fill(null);
             // Days from API are 0=Sun to 6=Sat. Our visual week starts Sun at top.
             week.contributionDays.forEach(day => {
@@ -230,26 +310,104 @@ document.addEventListener('DOMContentLoaded', () => {
             daysInWeek.forEach(dayData => {
                 const dayDiv = document.createElement('div');
                 dayDiv.className = 'contrib-day';
+                
                 if (dayData) {
-                    // Only set color if contributionCount > 0, let CSS handle 0-count days
-                    if (dayData.contributionCount > 0) {
-                        const orangeColor = contributionColors[dayData.color.toLowerCase()] || dayData.color;
-                        dayDiv.style.backgroundColor = orangeColor;
-                    }
-                    
-                    const tooltip = document.createElement('span');
+                    // Create tooltip first, as it's always associated with dayDiv
+                    const tooltip = document.createElement('div');
                     tooltip.className = 'contrib-day-tooltip';
                     const count = dayData.contributionCount;
                     const date = new Date(dayData.date);
                     const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                     tooltip.textContent = `${count} contribution${count === 1 ? '' : 's'} on ${formattedDate}`;
                     dayDiv.appendChild(tooltip);
+
+                    if (dayData.contributionCount > 0) {
+                        const orangeColor = contributionColors[dayData.color.toLowerCase()] || dayData.color;
+                        
+                        // Create the flyer div for animation
+                        const flyerDiv = document.createElement('div');
+                        flyerDiv.className = 'contrib-day-flyer';
+                        flyerDiv.style.backgroundColor = orangeColor;
+                        // Initial position/opacity is set by CSS class .contrib-day-flyer
+                        dayDiv.appendChild(flyerDiv);
+                    }
+                    // dayDiv itself no longer gets background color or opacity/transform directly for animation
                 }
+                
+                // Add hover events to show/hide tooltip with smart positioning
+                dayDiv.addEventListener('mouseenter', () => {
+                    const tooltip = dayDiv.querySelector('.contrib-day-tooltip');
+                    if (!tooltip) return;
+                    
+                    // Make the tooltip visible
+                    tooltip.style.opacity = '1';
+                    
+                    // Smart positioning to prevent overflow
+                    // We need to wait for the tooltip to have its dimensions
+                    setTimeout(() => {
+                        const tooltipRect = tooltip.getBoundingClientRect();
+                        const containerRect = weeksRenderContainer.getBoundingClientRect();
+                        const dayRect = dayDiv.getBoundingClientRect();
+                        
+                        // Calculate left position (center by default)
+                        let leftPos = (dayRect.width / 2) - (tooltipRect.width / 2);
+                        
+                        // Check if tooltip would overflow left edge
+                        const leftOverflow = dayRect.left + leftPos - containerRect.left;
+                        if (leftOverflow < 0) {
+                            // Adjust to not overflow left
+                            leftPos -= leftOverflow;
+                            leftPos += 5; // Add small padding
+                        }
+                        
+                        // Check if tooltip would overflow right edge
+                        const rightOverflow = (dayRect.left + leftPos + tooltipRect.width) - (containerRect.right);
+                        if (rightOverflow > 0) {
+                            // Adjust to not overflow right
+                            leftPos -= rightOverflow;
+                            leftPos -= 5; // Add small padding
+                        }
+                        
+                        // Apply the calculated position
+                        tooltip.style.left = `${leftPos}px`;
+                        
+                        // Handle vertical positioning
+                        // Check if there's enough room above the cell
+                        const topSpace = dayRect.top - containerRect.top;
+                        if (topSpace < tooltipRect.height + 10) {
+                            // Not enough space above, show below
+                            tooltip.style.transform = 'translateY(0)';
+                            tooltip.style.top = '100%';
+                            tooltip.style.marginTop = '6px';
+                        } else {
+                            // Show above (default)
+                            tooltip.style.transform = 'translateY(-100%)';
+                            tooltip.style.top = '0';
+                            tooltip.style.marginTop = '-6px';
+                        }
+                    }, 0);
+                });
+                
+                dayDiv.addEventListener('mouseleave', () => {
+                    if (dayDiv.querySelector('.contrib-day-tooltip')) {
+                        dayDiv.querySelector('.contrib-day-tooltip').style.opacity = '0';
+                    }
+                });
+                
                 weekDiv.appendChild(dayDiv);
             });
             weeksRenderContainer.appendChild(weekDiv);
         });
         mainGraphRow.appendChild(weeksRenderContainer);
+
+        // Animate the contribution day flyers into view
+        const animatedFlyers = weeksRenderContainer.querySelectorAll('.contrib-day-flyer');
+        animatedFlyers.forEach((flyerDiv, index) => {
+            setTimeout(() => {
+                flyerDiv.style.opacity = '1';
+                flyerDiv.style.transform = 'translateX(0)';
+            }, index * 10); // Stagger the animation slightly
+        });
 
         weeksRenderContainer.addEventListener('scroll', () => {
             monthLabelsScroller.scrollLeft = weeksRenderContainer.scrollLeft;
