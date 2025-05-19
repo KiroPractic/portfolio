@@ -821,7 +821,6 @@
       position: relative;
       margin-bottom: 120px; /* Increased vertical spacing */
       width: 100%;
-      height: 150px; /* Fixed height for timeline items */
       opacity: 0;
       transform: translateY(40px);
       transition: opacity 0.8s ease, transform 0.8s ease;
@@ -875,14 +874,13 @@
     
     /* Position content boxes alternating left/right with equal spacing */
     .timeline-item:nth-child(odd) .timeline-item-content {
-      right: 55%;
-      position: absolute;
+      margin-right: 55%;
       text-align: right;
     }
     
     .timeline-item:nth-child(even) .timeline-item-content {
-      left: 55%;
-      position: absolute;
+      margin-left: 55%;
+      text-align: left;
     }
     
     /* Connecting lines from dots to content */
