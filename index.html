@@ -1835,18 +1835,24 @@
     body.dark #wspay-logo-container {
       position: relative; /* Ensure z-index context for pseudo-element */
       display: inline-block; /* Or block, depending on desired layout with other elements if any */
+      background-color: white; /* Add white background to the container itself */
+      border-radius: 8px; /* Add rounded corners */
+      overflow: hidden; /* Ensure the background respects the border radius */
+      padding: 8px; /* Add padding around the logo */
     }
 
     body.dark #wspay-logo-container::before {
       content: '';
       position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: calc(100% + 20px); /* A bit wider than the logo itself */
-      height: calc(100% + 20px); /* A bit taller than the logo itself */
-      background: radial-gradient(ellipse at center, rgba(220, 220, 220, 0.3) 0%, rgba(200, 200, 200, 0) 70%);
-      /* border-radius: 50%; Removed to match logo shape */
+      left: 0; /* Align to the container's left edge */
+      top: 0; /* Align to the container's top edge */
+      width: 100%; /* Match container width */
+      height: 100%; /* Match container height */
+      background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.95) 50%,
+        rgba(255, 255, 255, 0.9) 100%
+      ); /* Fading white background */
       z-index: 0; /* Behind the image */
       pointer-events: none;
     }
@@ -1854,6 +1860,7 @@
     body.dark #wspay-logo-container img {
       position: relative; /* Ensure image can have its own z-index */
       z-index: 1; /* Above the pseudo-element */
+      margin: 0; /* Remove any default margins */
     }
   </style>
 </head>
