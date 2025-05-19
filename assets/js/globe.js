@@ -7,77 +7,71 @@ document.addEventListener('DOMContentLoaded', async () => {
       {
         name: 'United States',
         code: 'USA',
-        description: 'Visited the East and West coasts, including New York, Miami, and San Francisco.',
+        description: 'I have just been to the US once, but it was an amazing experience, and I am sure to come back and explore the rest of the country.',
         albumLink: 'https://photos.google.com/album/us-trip',
         images: [
-          'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1534430480872-3498386e7856?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/us/20221127_130622.jpg',
+          'assets/images/us/20221128_130650.jpg',
+          'assets/images/us/20221128_144614.jpg'
         ],
         type: 'visited'
       },
       {
         name: 'Canada',
         code: 'CAN',
-        description: 'Explored Toronto, Montreal, and the beautiful landscapes of Banff National Park.',
+        description: 'The best road trip I have ever had. Visited Toronto, Niagara Falls, Montreal, Ottawa, and Quebec City, all in 9 days. It is scary how enormous the country is. Their history is not that long, but there is still lots to see, and the nature is unbelievable.',
         albumLink: 'https://photos.google.com/album/canada-trip',
         images: [
-          'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1569681157442-5f10fcaa0650?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1494762757688-e1c6d2defe5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/canada/20230708_134200.jpg',
+          'assets/images/canada/20230712_110756.jpg',
+          'assets/images/canada/20230713_163312.jpg',
+          'assets/images/canada/20230713_194244~2.jpg',
+          'assets/images/canada/20230714_163007.jpg',
+          'assets/images/canada/20230715_111911.jpg'
         ],
         type: 'visited'
       },
       {
         name: 'Greece',
         code: 'GRC',
-        description: `<div><strong>High School Trip:</strong> Visited Greece with my high school classmates and had a fantastic time exploring this cradle of Western civilization.</div>
-        <div style="margin-top:12px"><strong>Zakynthos:</strong> Experienced the amazing beaches of this island paradise - crystal clear waters and stunning coastlines.</div>
-        <div style="margin-top:12px"><strong>Athens:</strong> Explored the rich history of the Greek capital, with its ancient ruins and archaeological treasures. The historical sites were impressive despite the city being a bit dirty.</div>
-        <div style="margin-top:12px"><strong>Meteora:</strong> The monasteries perched atop massive rock formations were truly breathtaking - one of the most unique and awe-inspiring landscapes I've ever seen.</div>`,
+        description: `<div><strong>High School Trip:</strong> Visited Greece with my high school classmates. The cradle of Western civilization, with amazing history and nature.</div>
+        <div style="margin-top:12px"><strong>Zakynthos:</strong> Experienced the amazing beaches of this island paradise, with stunning coastlines and great nightlife.</div>
+        <div style="margin-top:12px"><strong>Athens:</strong> I felt like I time-travelled 2000 years back in time, because of the vast historical sites that do not stop showing up around every corner.</div>
+        <div style="margin-top:12px"><strong>Meteora:</strong> The monasteries were the highlight of the trip. The nature and the architecture intertwining in such a way is unbelievable.</div>`,
         albumLink: 'https://photos.google.com/album/greece-high-school-trip',
         images: [
-          'https://images.unsplash.com/photo-1533105079780-92b9be482077?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', // Zakynthos
-          'https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', // Athens
-          'https://images.unsplash.com/photo-1602763288580-aa2794329e14?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', // Meteora
-          'https://images.unsplash.com/photo-1594019108322-28a0ecc9eec7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'  // Greece beach
+          'https://flagcdn.com/w320/gr.png'
         ],
         type: 'visited'
       },
       {
         name: 'Bosnia and Herzegovina',
         code: 'BIH',
-        description: `<div><strong>Concert Experience:</strong> Visited in summer 2024 to play a concert with my band "Gacki Galeb". Connecting with the audience through music in a different country was a memorable experience.</div>
-        <div style="margin-top:12px"><strong>Culture:</strong> Enjoyed experiencing the unique blend of cultures, delicious food, and warm hospitality that Bosnia is known for.</div>`,
+        description: `<div>Visited in summer 2024 to play a concert with my band "Gacki Galeb". The audience was amazing, and the experience was unforgettable. I hope to play there again soon.</div>`,
         albumLink: 'https://photos.google.com/album/bosnia-concert-trip',
         images: [
-          'https://images.unsplash.com/photo-1591853203314-2a4cbf317966?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1518622023536-6ff23b8cd0a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'https://flagcdn.com/w320/ba.png'
         ],
         type: 'visited'
       },
       {
         name: 'Serbia',
         code: 'SRB',
-        description: `<div><strong>Team Building:</strong> Visited in 2022 as part of a team-building trip with my previous workplace. Bonding with colleagues while experiencing a new country was valuable both professionally and personally.</div>
+        description: `<div><strong>Team Building:</strong> Visited in 2022 as part of a team-building trip with my previous workplace. The city is full of life, and although it's so close to Croatia, it feels like a different continent.</div>
         <div style="margin-top:12px"><strong>Belgrade:</strong> Explored the vibrant capital city with its rich history, energetic nightlife, and distinctive cultural scene.</div>`,
         albumLink: 'https://photos.google.com/album/serbia-team-building',
         images: [
-          'https://images.unsplash.com/photo-1608744882201-52a7f7f3dd60?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1552128927-04d682cc3803?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'https://flagcdn.com/w320/rs.png'
         ],
         type: 'visited'
       },
       {
         name: 'Hungary',
         code: 'HUN',
-        description: `<div><strong>High School Trip:</strong> Visited with my high school classmates and loved exploring Budapest with its stunning architecture and rich history.</div>
-        <div style="margin-top:12px"><strong>Lake Balaton:</strong> Was amazed by Lake Balaton's vastness - it feels like being at the sea! Would love to return to Hungary to attend an F1 race at the Hungaroring.</div>`,
+        description: `<div><strong>High School Trip:</strong> Visited with my high school classmates. Budapest was amazing, and I am sure to come back soon and go to the F1 race as well.</div>`,
         albumLink: 'https://photos.google.com/album/hungary-high-school-trip',
         images: [
-          'https://images.unsplash.com/photo-1551867633-194f125bddfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1596470690379-e8ecaa615ff3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'https://flagcdn.com/w320/hu.png'
         ],
         type: 'visited'
       },
@@ -88,8 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div style="margin-top:12px"><strong>Medieval Architecture:</strong> Enjoyed the well-preserved medieval architecture, especially the three towers perched dramatically on Mount Titano's peaks.</div>`,
         albumLink: 'https://photos.google.com/album/san-marino-trips',
         images: [
-          'https://images.unsplash.com/photo-1534259080074-1e0a5ec3d221?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1556121631-2a1b980bc2a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'https://flagcdn.com/w320/sm.png'
         ],
         type: 'visited'
       },
@@ -100,9 +93,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div style="margin-top:12px"><strong>Tenerife:</strong> Visited this beautiful Canary Island as a child, with fond memories of the volcanic landscapes, beaches, and family adventures.</div>`,
         albumLink: 'https://photos.google.com/album/spain-trips',
         images: [
-          'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1504019347908-b45f9b0b8dd5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1512753360435-329c4535a9a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/spain/20241105_181446.jpg',
+          'assets/images/spain/20241106_233628.jpg'
         ],
         type: 'visited'
       },
@@ -113,9 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div style="margin-top:12px"><strong>Museums:</strong> Explored Monaco's amazing museums that showcase its rich history, royal heritage, and automotive excellence. The tiny principality packs in impressive cultural attractions despite its small size.</div>`,
         albumLink: 'https://photos.google.com/album/monaco-trip',
         images: [
-          'https://images.unsplash.com/photo-1562886889-22cd7970c4d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1544413660-299165566b1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1564508211308-4c2e0b930b9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'https://flagcdn.com/w320/mc.png'
         ],
         type: 'visited'
       },
@@ -126,9 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div style="margin-top:12px"><strong>Scenic Journey:</strong> The train ride back to Croatia through the Swiss Alps and along Lake Como was my favorite train journey ever. The snow-covered mountains and breathtaking landscapes made for an unforgettable experience.</div>`,
         albumLink: 'https://photos.google.com/album/switzerland-cern-trip',
         images: [
-          'https://images.unsplash.com/photo-1527668752968-14dc70a27c95?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'https://flagcdn.com/w320/ch.png'
         ],
         type: 'visited'
       },
@@ -139,48 +127,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div style="margin-top:12px"><strong>Experiences:</strong> Made multiple trips to Austria over the years, enjoying the perfect blend of Alpine scenery, rich cultural heritage, and world-class sporting events.</div>`,
         albumLink: 'https://photos.google.com/album/austria-f1-trips',
         images: [
-          'https://images.unsplash.com/photo-1516550893885-7b7791882062?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1573599852326-2ef5a1ea2776?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1516550135131-fe3dcb0bedc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/austria/20170709_121237.jpg',
+          'assets/images/austria/20240812_143604.jpg',
+          'assets/images/austria/20241018_122017~2.jpg'
         ],
         type: 'visited'
       },
       {
         name: 'Italy',
         code: 'ITA',
-        description: `<div><strong>Sicily:</strong> Fell in love with Sicily in January 2024. The island's unique blend of culture, cuisine, and natural beauty is simply captivating.</div>
+        description: `<div><strong>Sicily:</strong> Fell in love with Sicily in January 2024. The island's unique blend of culture, cuisine, and natural beauty is breathtaking.</div>
         <div style="margin-top:12px"><strong>Experiences:</strong> Explored the magnificent volcanoes and beautiful coastlines. The connection between the sea and land created some of the most stunning landscapes I've ever seen.</div>`,
         albumLink: 'https://photos.google.com/album/italy-sicily-trip',
         images: [
-          'https://images.unsplash.com/photo-1516108317508-6788f6a160e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1523906921802-b5d2d899e93b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1534356336120-25d0925382e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/italy/20240112_102408.jpg',
+          'assets/images/italy/20240113_113722.jpg',
+          'assets/images/italy/20240114_104555.jpg',
+          'assets/images/italy/20240114_160147.jpg'
         ],
         type: 'visited'
       },
       {
         name: 'France',
         code: 'FRA',
-        description: `<div><strong>Paris:</strong> Visited in January 2024 and was enchanted by the city's magical atmosphere, especially when it was covered in snow.</div>
-        <div style="margin-top:12px"><strong>Experiences:</strong> The unique Parisian vibes, stunning architecture, and rich cultural scene made for an unforgettable experience. Witnessing the city during a snowfall added an extra layer of magic to the City of Light.</div>`,
+        description: `<div><strong>Paris:</strong> Visited in January 2024 and was surprised by the city's beauty, and the lack of tourists, especially when it was covered in snow.</div>`,
         albumLink: 'https://photos.google.com/album/france-paris-trip',
         images: [
-          'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1550340499-a6c60f254469?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/france/20240116_103249.jpg',
+          'assets/images/france/20240116_152646.jpg',
+          'assets/images/france/20240116_165344.jpg'
         ],
         type: 'visited'
       },
       {
         name: 'Netherlands',
         code: 'NLD',
-        description: `<div><strong>Architecture & History:</strong> Fascinated by the Netherlands' amazing history and lovely architecture throughout different cities.</div>
-        <div style="margin-top:12px"><strong>Amsterdam:</strong> While the country has many gems, I found Amsterdam somewhat underwhelming compared to expectations. The real treasures are in the lesser-known cities and countryside.</div>`,
+        description: `<div>The Netherlands has a different vibe to all the other countries I have visited. It has great architecture, but, for me, it is lacking in natural beauty.</div>`,
         albumLink: 'https://photos.google.com/album/netherlands-trip',
         images: [
-          'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1557699987-e5f0ea05ba39?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'https://flagcdn.com/w320/nl.png'
         ],
         type: 'visited'
       },
@@ -191,62 +176,64 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div style="margin-top:12px"><strong>Future Plans:</strong> Would love to return and explore Slovenia's hidden secrets and natural wonders as an adult. The country has so much more to offer beyond skiing.</div>`,
         albumLink: 'https://photos.google.com/album/slovenia-skiing',
         images: [
-          'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1598112599793-ce298e0ea1ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1625330607744-bde82b348888?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'https://flagcdn.com/w320/si.png'
         ],
         type: 'visited'
       },
       {
         name: 'Germany',
         code: 'DEU',
-        description: `<div><strong>UEFA Euro 2024:</strong> First visited in 2024 to watch Croatia play in the Euros. The atmosphere and experience of international football was incredible.</div>
-        <div style="margin-top:12px"><strong>Hamburg:</strong> One of my favorite cities I've visited. Its blend of maritime heritage, modern architecture, and vibrant urban life makes it a standout destination in Europe.</div>`,
+        description: `<div><strong>UEFA Euro 2024:</strong> First visited in 2024 to watch Croatia play in the Euros. The atmosphere and experience was incredible. So many people, all in positive spirits.</div>
+        <div style="margin-top:12px"><strong>Hamburg:</strong> One of my favorite cities I've visited. Everything is so clean and well-organized. The landscapes are great, and the people are friendly.</div>`,
         albumLink: 'https://photos.google.com/album/germany-euro-2024',
         images: [
-          'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1578129377237-4ccb87e1e539?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1577185816322-21f2a92b1342?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/germany/20240616_123011~2.jpg',
+          'assets/images/germany/20240620_160020~2.jpg',
+          'assets/images/germany/20240624_221419.jpg'
         ],
         type: 'visited'
       },
       {
         name: 'Portugal',
         code: 'PRT',
-        description: `<div><strong>Porto:</strong> My favorite city in the world so far! Visited in January 2025 and was captivated by its charming riverfront, historic architecture, and incredible food scene.</div>
+        description: `<div><strong>Porto:</strong> My favorite city in the world so far! Visited in January 2025 and was amazed by the city's charm, the landscapes, and the cuisine.</div>
         <div style="margin-top:12px"><strong>Lisbon:</strong> Explored the capital's colorful neighborhoods, enjoyed the traditional Fado music, and sampled delicious Portuguese cuisine.</div>`,
         albumLink: 'https://photos.google.com/album/portugal-trip',
         images: [
-          'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1558370781-d6196949e317?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1600111636899-1f9146c2dfd2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/portugal/20250114_110333.jpg',
+          'assets/images/portugal/20250114_153615.jpg',
+          'assets/images/portugal/20250115_085636.jpg',
+          'assets/images/portugal/20250116_172152.jpg',
+          'assets/images/portugal/20250116_180220.jpg',
+          'assets/images/portugal/20250117_112809.jpg',
+          'assets/images/portugal/20250118_161455.jpg'
         ],
         type: 'visited'
       },
       {
         name: 'United Kingdom',
         code: 'GBR',
-        description: `<div><strong>Education:</strong> I studied in Liverpool from 2017 to 2021, completing my MEng in Computer Science with honours. My time at university was incredibly enriching, providing me with both academic excellence and unforgettable experiences.</div>
-        <div style="margin-top:12px"><strong>Silverstone F1:</strong> Attended a Formula 1 race at the iconic Silverstone Circuit and experienced the best atmosphere of my life. The passion of British racing fans, the circuit's heritage, and the thrilling race made for an unforgettable motorsport experience.</div>
-        <div style="margin-top:12px"><strong>Cities:</strong> The UK is one of my favorite countries I've visited. Edinburgh stands out as one of my top cities with its stunning architecture and vibrant culture. I've visited London numerous times and always enjoy its dynamic energy, world-class museums, and diverse food scene.</div>`,
+        description: `<div><strong>Education:</strong> I studied in Liverpool from 2017 to 2021, completing my MEng in Computer Science with honours. My time at university was incredible. I met a lot of great people, and I learned how to be independent. That is where I learned that I live on the Earth, and not in Croatia.</div>
+        <div style="margin-top:12px"><strong>Silverstone F1:</strong> Attended a Formula 1 race at the iconic Silverstone Circuit and experienced one of the best atmospheres of my life. The passion of the racing fans, the circuit's heritage, and the thrilling race made for an unforgettable motorsport experience.</div>
+        <div style="margin-top:12px"><strong>Cities:</strong> The UK is one of my favorite countries I've visited. Edinburgh stands out as one of my top cities with its unbeliveable architecture and vibrant culture. I've visited London numerous times and always enjoy its never-ending life, world-class museums, and diverse food scene.</div>`,
         albumLink: 'https://photos.google.com/album/uk-trip',
         images: [
-          'https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1543799382-9a7ce5dd6eca?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1633607822694-55d26fe31637?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/uk/20250304_115113.jpg',
+          'assets/images/uk/20250305_115954.jpg',
+          'assets/images/uk/20250306_125549~2.jpg'
         ],
         type: 'visited'
       },
       {
         name: 'Croatia',
         code: 'HRV',
-        description: 'My beautiful home country with amazing coastlines, historic cities, and natural wonders.',
+        description: 'My home and my favourite country. The nature is incredible. People are good and open. Our history is rich and unique. There is a lot to improve, but I am proud to come from Croatia.',
         albumLink: 'https://photos.google.com/album/croatia-memories',
         images: [
-          'https://images.unsplash.com/photo-1555990793-da11153b2473?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1545158535-c3f7168c28b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1601118964938-228a89955311?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          'assets/images/croatia/20250318_173633.jpg',
+          'assets/images/croatia/20250509_175553.jpg',
+          'assets/images/croatia/20250515_152157~4.jpg',
+          'assets/images/croatia/20250518_110407.jpg'
         ],
         type: 'home'
       }
@@ -448,7 +435,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (visitedCountryMap[code] || name === 'United States' || name === 'Canada' || name === 'United Kingdom' || 
                    name === 'Portugal' || name === 'Austria' || name === 'Italy' || name === 'France' || 
                    name === 'Netherlands' || name === 'Slovenia' || name === 'Germany' || name === 'Switzerland' || 
-                   name === 'Monaco' || name === 'Bosnia and Herzegovina' || name === 'Serbia' || 
+                   name === 'Monaco' || name === 'Bosnia and Herzegovina' || name === 'Bosnia and Herz.' || name === 'Serbia' || 
                    name === 'Hungary' || name === 'San Marino' || name === 'Spain' || name === 'Greece') {
           // Visited country
           return `<div style="color:white;background-color:rgba(217,119,6,0.9);padding:5px 8px;border-radius:3px;">
@@ -473,7 +460,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         name === 'Croatia' || name === 'United States' || name === 'Canada' || name === 'United Kingdom' || 
                         name === 'Portugal' || name === 'Austria' || name === 'Italy' || name === 'France' || 
                         name === 'Netherlands' || name === 'Slovenia' || name === 'Germany' || name === 'Switzerland' || 
-                        name === 'Monaco' || name === 'Bosnia and Herzegovina' || name === 'Serbia' || 
+                        name === 'Monaco' || name === 'Bosnia and Herzegovina' || name === 'Bosnia and Herz.' || name === 'Serbia' || 
                         name === 'Hungary' || name === 'San Marino' || name === 'Spain' || name === 'Greece';
         
         document.body.style.cursor = isVisited ? 'pointer' : 'default';
@@ -494,7 +481,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         name === 'Croatia' || name === 'United States' || name === 'Canada' || name === 'United Kingdom' || 
                         name === 'Portugal' || name === 'Austria' || name === 'Italy' || name === 'France' || 
                         name === 'Netherlands' || name === 'Slovenia' || name === 'Germany' || name === 'Switzerland' || 
-                        name === 'Monaco' || name === 'Bosnia and Herzegovina' || name === 'Serbia' || 
+                        name === 'Monaco' || name === 'Bosnia and Herzegovina' || name === 'Bosnia and Herz.' || name === 'Serbia' || 
                         name === 'Hungary' || name === 'San Marino' || name === 'Spain' || name === 'Greece';
         
         if (!isVisited) return;
@@ -532,7 +519,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           showCountryPopup(visitedCountryMap['CHE']);
         } else if (name === 'Monaco') {
           showCountryPopup(visitedCountryMap['MCO']);
-        } else if (name === 'Bosnia and Herzegovina') {
+        } else if (name === 'Bosnia and Herzegovina' || name === 'Bosnia and Herz.') {
           showCountryPopup(visitedCountryMap['BIH']);
         } else if (name === 'Serbia') {
           showCountryPopup(visitedCountryMap['SRB']);
@@ -888,6 +875,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           'Switzerland': 'CHE',
           'Monaco': 'MCO',
           'Bosnia and Herzegovina': 'BIH',
+          'Bosnia & Herzegovina': 'BIH',
+          'Bosnia': 'BIH',
+          'Bosnia-Herzegovina': 'BIH',
+          'Bosnia and Herz.': 'BIH',
+          'Bosnia and Herz': 'BIH',
+          'Bosnia & Herz.': 'BIH',
+          'Bosnia & Herz': 'BIH',
           'Serbia': 'SRB',
           'Hungary': 'HUN',
           'San Marino': 'SMR',
@@ -901,6 +895,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const countryName = feature.properties.name;
             if (nameToCodeMap[countryName]) {
               feature.properties.ISO_A3 = nameToCodeMap[countryName];
+            } else {
+              // Removed debug logging
             }
           }
           return feature;
