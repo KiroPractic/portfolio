@@ -123,8 +123,6 @@ function checkToggleTheme() {
   const distance = Math.sqrt(dx*dx + dy*dy);
   const threshold = 35; // Smaller threshold for more precise control
   
-  console.log('Release distance:', distance);
-  
   if (distance > threshold) {
     // Toggle dark mode
     document.body.classList.toggle('dark');
@@ -155,8 +153,6 @@ function handleInteraction(eventX, eventY) {
   const dx = clickX - ropePull.position.x;
   const dy = clickY - ropePull.position.y;
   const distance = Math.sqrt(dx*dx + dy*dy);
-  
-  console.log('Click/Touch distance (adjusted):', distance);
   
   if (distance < 40) { // Threshold might need adjustment if interaction feels off
     // Store the *adjusted* mouse position for our custom constraint
