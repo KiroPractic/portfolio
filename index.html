@@ -17,6 +17,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
+    /* Universal mobile tap highlight prevention */
+    *, *::before, *::after {
+      -webkit-tap-highlight-color: transparent;
+    }
+    
     /* Footer styles */
     .footer {
       margin-top: 40px;
@@ -73,6 +78,14 @@
       overflow: hidden;
       touch-action: pan-y; /* Allow vertical scrolling but handle horizontal swipes in JS */
       cursor: grab; /* Show grab cursor to indicate swipeable content */
+      /* Prevent blue highlight/selection on mobile */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
     
     .carousel-container:active {
@@ -114,6 +127,15 @@
       cursor: pointer;
       z-index: 2;
       transition: background 0.3s, opacity 0.3s;
+      /* Prevent blue highlight/selection on mobile */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      outline: none;
     }
     
     /* Add responsive design for carousel buttons */
@@ -175,6 +197,15 @@
       margin: 0 5px;
       cursor: pointer;
       transition: background 0.3s;
+      /* Prevent blue highlight/selection on mobile */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      outline: none;
     }
     
     .carousel-dot.active {
@@ -202,6 +233,9 @@
       --lamp-base-height: 15px;
       --lamp-shade-holder-position: 115px;
       --lamp-shade-position: 120px;
+      /* Global mobile tap highlight prevention */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
     }
     body.dark {
       background-color: #0c0a09;
@@ -1016,10 +1050,27 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      /* Prevent blue highlight/selection on mobile */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
     
     #globe-container > canvas {
       margin: 0 auto;
+      /* Prevent blue highlight/selection on mobile */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      outline: none;
     }
     
     /* Country popup styling */
@@ -1121,6 +1172,15 @@
       z-index: 10;
       transition: background 0.3s;
       padding: 0; /* Remove any padding */
+      /* Prevent blue highlight/selection on mobile */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      outline: none;
     }
     
     .close-popup:hover {
