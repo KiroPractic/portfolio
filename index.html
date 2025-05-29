@@ -1734,23 +1734,59 @@
     }
     
     .contrib-day-tooltip {
-      visibility: hidden;
-      width: max-content;
-      background-color: #24292e;
-      color: #ffffff;
-      text-align: center;
-      border-radius: 4px;
-      padding: 5px 8px;
       position: absolute;
-      z-index: 100;
-      bottom: 125%;
-      left: 50%;
-      transform: translateX(-50%);
+      padding: 8px 10px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.5;
       opacity: 0;
-      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-      font-size: 12px;
       pointer-events: none;
+      transition: opacity 0.15s ease-in-out;
+      z-index: 100;
       white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+      background-color: #ffffff;
+      color: #24292f;
+      border: 1px solid #d0d7de;
+    }
+
+    .contrib-day {
+      position: relative;
+      width: 11px;
+      height: 11px;
+      margin: 1px;
+      border-radius: 2px;
+    }
+
+    .contrib-day:not([style*="background-color"]) {
+      background-color: #ebedf0;
+    }
+
+    .contrib-week {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Dark theme styles */
+    body.dark .contrib-day-tooltip {
+      background-color: #2d333b;
+      color: #e6edf3;
+      border: 1px solid #444c56;
+    }
+
+    body.dark .contrib-day:not([style*="background-color"]) {
+      background-color: #161b22;
+    }
+    
+    .contrib-day:hover .contrib-day-tooltip {
+      visibility: visible;
+      opacity: 1;
     }
     
     .contrib-day:hover .contrib-day-tooltip {

@@ -6,21 +6,20 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingMessage.textContent = 'Loading GitHub stats...';
     }
 
-    // Single set of balanced colors that work well in both light and dark themes
+    // Contribution color mapping from GitHub's default colors to custom orange theme
     const contributionColors = {
-        // No mapping for #ebedf0 here, CSS will handle 0-contribution days
         '#9be9a8': '#EF8E38', // Level 1 - medium orange
         '#40c463': '#E67E22', // Level 2 - medium-dark orange
         '#30a14e': '#D35400', // Level 3 - darker orange
         '#216e39': '#BA4A00'  // Level 4 - deep orange/amber
     };
 
-    // Add styles to document head
+    // Add dynamic styles for contribution graph
     const githubStyles = document.createElement('style');
     githubStyles.id = 'github-contrib-styles';
     githubStyles.textContent = `
         .contrib-day-tooltip {
-            position: absolute;
+            position: fixed;
             padding: 8px 10px;
             border-radius: 3px;
             font-size: 11px;
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.15s ease-in-out;
-            z-index: 100;
+            z-index: 9999;
             white-space: nowrap;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
             text-align: center;
@@ -85,11 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(githubStyles);
 
+    /**
+     * Fetches GitHub profile data and renders all sections
+     */
     async function fetchGitHubData() {
         try {
             const response = await fetch('/api/github-profile');
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: 'Failed to fetch GitHub data. Server responded with ' + response.status }));
+                const errorData = await response.json().catch(() => ({ 
+                    message: 'Failed to fetch GitHub data. Server responded with ' + response.status 
+                }));
                 throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
@@ -124,6 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    /**
+     * Renders the GitHub profile section with avatar, username, and stats
+     */
     function renderProfileSection(profileData) {
         if (!profileData) return;
         
@@ -167,12 +174,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    /**
+     * Renders the README section with basic Markdown formatting
+     */
     function renderReadmeSection(readmeContent) {
         const readmeContainer = document.getElementById('github-readme-container');
         if (!readmeContainer || !readmeContent) return;
         
-        // Simple conversion of Markdown headers and basic formatting
-        // Note: For a complete Markdown parser, consider using a library like marked.js
+        // Basic Markdown to HTML conversion
         const formattedContent = readmeContent
             .replace(/^# (.*$)/gm, '<h3>$1</h3>')
             .replace(/^## (.*$)/gm, '<h4>$1</h4>')
@@ -194,6 +203,10 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
+    /**
+     * Renders the GitHub contributions graph using CSS Grid layout
+     * Shows newest contributions first (leftmost) with proper month labels
+     */
     function renderContributionGraph(data, container) {
         if (!data || !data.weeks || data.weeks.length === 0) {
             container.innerHTML = '<p class="github-graph-loading">No contribution data available.</p>';
@@ -205,263 +218,245 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reverse weeks to show newest first (leftmost)
         const reversedWeeks = data.weeks.slice().reverse();
 
+        // Calculate total width needed for the graph
+        const totalWidth = (reversedWeeks.length * 11) + ((reversedWeeks.length - 1) * 2);
+
+        // Main container with horizontal scrolling
         const overallGraphLayout = document.createElement('div');
         overallGraphLayout.style.width = '100%';
-        overallGraphLayout.style.position = 'relative'; // Add positioning context
-        overallGraphLayout.style.overflowY = 'visible'; // Allow tooltip overflow
-        overallGraphLayout.style.position = 'relative'; // Add positioning context
-        overallGraphLayout.style.overflowY = 'visible'; // Allow tooltip overflow
+        overallGraphLayout.style.position = 'relative';
+        overallGraphLayout.style.overflowY = 'hidden';
+        overallGraphLayout.style.overflowX = 'auto';
 
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const monthLabelElements = [];
-        let currentMonth = -1;
+        // CSS Grid container for precise alignment
+        const gridContainer = document.createElement('div');
+        gridContainer.style.display = 'grid';
+        gridContainer.style.gridTemplateColumns = `28px repeat(${reversedWeeks.length}, 11px)`;
+        gridContainer.style.gridTemplateRows = '15px repeat(7, 11px)';
+        gridContainer.style.gap = '2px';
+        gridContainer.style.width = `${totalWidth + 28 + 5}px`;
+        gridContainer.style.minWidth = '100%';
 
-        // Generate month labels based on reversedWeeks
-        reversedWeeks.forEach((week, weekIndex) => {
-            if (week.contributionDays.length > 0) {
-                // Use any day in the week to find the month, as a week can span two months.
-                // For simplicity, using the first reported day in that week block.
-                const dateForMonth = new Date(week.contributionDays[0].date);
-                const month = dateForMonth.getMonth();
-                if (month !== currentMonth) {
-                    // Heuristic: Add label if it's a new month & not the very first week unless graph is short.
-                    if (weekIndex > 0 || reversedWeeks.length < 26) { 
-                         monthLabelElements.push({ name: months[month], weekIndex: weekIndex });
-                    }
-                    currentMonth = month;
-                }
-            }
-        });
-        
-        const monthLabelsScroller = document.createElement('div');
-        monthLabelsScroller.style.display = 'flex';
-        monthLabelsScroller.style.paddingLeft = '28px'; 
-        monthLabelsScroller.style.overflow = 'hidden'; 
-        monthLabelsScroller.style.fontSize = '10px';
-        monthLabelsScroller.style.height = '15px'; 
-        monthLabelsScroller.style.marginBottom = '2px';
-        monthLabelsScroller.className = 'github-months-scroller';
-
-        let lastProcessedWeekIndexForMonths = 0;
-        monthLabelElements.forEach(monthInfo => {
-            const weeksSinceLastLabel = monthInfo.weekIndex - lastProcessedWeekIndexForMonths;
-            if (weeksSinceLastLabel > 0) {
-                const spacer = document.createElement('span');
-                spacer.style.display = 'inline-block';
-                spacer.style.minWidth = `${weeksSinceLastLabel * 13}px`; 
-                monthLabelsScroller.appendChild(spacer);
-            }
-            const labelSpan = document.createElement('span');
-            labelSpan.textContent = monthInfo.name;
-            labelSpan.style.display = 'inline-block';
-            // Give month label some minimum width (e.g., 2-3 weeks) to be readable
-            const labelMinWidthWeeks = Math.max(1, Math.min(2, weeksSinceLastLabel > 0 ? weeksSinceLastLabel : 1)); 
-            labelSpan.style.minWidth = `${13 * labelMinWidthWeeks}px`; 
-            monthLabelsScroller.appendChild(labelSpan);
-            lastProcessedWeekIndexForMonths = monthInfo.weekIndex + labelMinWidthWeeks;
-        });
-        if (reversedWeeks.length > lastProcessedWeekIndexForMonths) {
-            const finalSpacer = document.createElement('span');
-            finalSpacer.style.display = 'inline-block';
-            finalSpacer.style.minWidth = `${(reversedWeeks.length - lastProcessedWeekIndexForMonths) * 13}px`;
-            monthLabelsScroller.appendChild(finalSpacer);
-        }
-
-        const mainGraphRow = document.createElement('div');
-        mainGraphRow.style.display = 'flex';
-        mainGraphRow.style.position = 'relative'; // Add positioning context
-        mainGraphRow.style.overflowY = 'visible'; // Allow tooltip overflow
-        mainGraphRow.style.position = 'relative'; // Add positioning context
-        mainGraphRow.style.overflowY = 'visible'; // Allow tooltip overflow
-
+        // Add day labels (left column)
         const dayLabels = ['', 'M', '', 'W', '', 'F', ''];
-        const dayLabelContainer = document.createElement('div');
-        dayLabelContainer.style.display = 'flex';
-        dayLabelContainer.style.flexDirection = 'column';
-        dayLabelContainer.style.marginRight = '5px';
-        dayLabelContainer.style.fontSize = '10px';
-        dayLabelContainer.style.flexShrink = '0';
-
-        for (let i = 0; i < 7; i++) {
+        dayLabels.forEach((label, i) => {
             const dayLabel = document.createElement('div');
-            dayLabel.textContent = dayLabels[i];
+            dayLabel.textContent = label;
+            dayLabel.style.gridColumn = '1';
+            dayLabel.style.gridRow = `${i + 2}`;
             dayLabel.style.height = '11px';
-            dayLabel.style.margin = '1px 0';
             dayLabel.style.lineHeight = '11px';
             dayLabel.style.textAlign = 'center';
-            dayLabelContainer.appendChild(dayLabel);
-        }
-        mainGraphRow.appendChild(dayLabelContainer);
-
-        const weeksRenderContainer = document.createElement('div');
-        weeksRenderContainer.style.display = 'flex';
-        weeksRenderContainer.style.overflowX = 'auto';
-        weeksRenderContainer.style.overflowY = 'visible'; // Allow tooltips to overflow vertically
-        weeksRenderContainer.style.overflowY = 'visible'; // Allow tooltips to overflow vertically
-        weeksRenderContainer.style.flexGrow = '1';
-        weeksRenderContainer.className = 'github-weeks-container';
-        weeksRenderContainer.style.position = 'relative'; // Establish positioning context
-        weeksRenderContainer.style.position = 'relative'; // Establish positioning context
-
-        reversedWeeks.forEach((week) => {
-            const weekDiv = document.createElement('div');
-            weekDiv.className = 'contrib-week';
-            
-            weekDiv.className = 'contrib-week';
-            
-            const daysInWeek = Array(7).fill(null);
-            // Days from API are 0=Sun to 6=Sat. Our visual week starts Sun at top.
-            week.contributionDays.forEach(day => {
-                daysInWeek[day.weekday] = day;
-            });
-
-            daysInWeek.forEach(dayData => {
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'contrib-day';
-                
-                
-                if (dayData) {
-                    // Create tooltip first, as it's always associated with dayDiv
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'contrib-day-tooltip';
-                    
-                    const count = dayData.contributionCount;
-                    const date = new Date(dayData.date);
-                    const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                    tooltip.textContent = `${count} contribution${count === 1 ? '' : 's'} on ${formattedDate}`;
-                    
-                    dayDiv.appendChild(tooltip);
-
-                    if (dayData.contributionCount > 0) {
-                        const orangeColor = contributionColors[dayData.color.toLowerCase()] || dayData.color;
-                        
-                        // Create the flyer div for animation
-                        const flyerDiv = document.createElement('div');
-                        flyerDiv.className = 'contrib-day-flyer';
-                        flyerDiv.style.backgroundColor = orangeColor;
-                        // Initial position/opacity is set by CSS class .contrib-day-flyer
-                        dayDiv.appendChild(flyerDiv);
-                    }
-                    // dayDiv itself no longer gets background color or opacity/transform directly for animation
-                }
-                
-                // Add hover events to show/hide tooltip with smart positioning
-                dayDiv.addEventListener('mouseenter', () => {
-                    const tooltip = dayDiv.querySelector('.contrib-day-tooltip');
-                    if (!tooltip) return;
-                    
-                    // Make the tooltip visible
-                    tooltip.style.opacity = '1';
-                    
-                    // Smart positioning to prevent overflow
-                    // We need to wait for the tooltip to have its dimensions
-                    setTimeout(() => {
-                        const tooltipRect = tooltip.getBoundingClientRect();
-                        const containerRect = weeksRenderContainer.getBoundingClientRect();
-                        const dayRect = dayDiv.getBoundingClientRect();
-                        
-                        // Calculate left position (center by default)
-                        let leftPos = (dayRect.width / 2) - (tooltipRect.width / 2);
-                        
-                        // Check if tooltip would overflow left edge
-                        const leftOverflow = dayRect.left + leftPos - containerRect.left;
-                        if (leftOverflow < 0) {
-                            // Adjust to not overflow left
-                            leftPos -= leftOverflow;
-                            leftPos += 5; // Add small padding
-                        }
-                        
-                        // Check if tooltip would overflow right edge
-                        const rightOverflow = (dayRect.left + leftPos + tooltipRect.width) - (containerRect.right);
-                        if (rightOverflow > 0) {
-                            // Adjust to not overflow right
-                            leftPos -= rightOverflow;
-                            leftPos -= 5; // Add small padding
-                        }
-                        
-                        // Apply the calculated position
-                        tooltip.style.left = `${leftPos}px`;
-                        
-                        // Handle vertical positioning
-                        // Check if there's enough room above the cell
-                        const topSpace = dayRect.top - containerRect.top;
-                        if (topSpace < tooltipRect.height + 10) {
-                            // Not enough space above, show below
-                            tooltip.style.transform = 'translateY(0)';
-                            tooltip.style.top = '100%';
-                            tooltip.style.marginTop = '6px';
-                        } else {
-                            // Show above (default)
-                            tooltip.style.transform = 'translateY(-100%)';
-                            tooltip.style.top = '0';
-                            tooltip.style.marginTop = '-6px';
-                        }
-                    }, 0);
-                });
-                
-                dayDiv.addEventListener('mouseleave', () => {
-                    if (dayDiv.querySelector('.contrib-day-tooltip')) {
-                        dayDiv.querySelector('.contrib-day-tooltip').style.opacity = '0';
-                    }
-                });
-                
-                weekDiv.appendChild(dayDiv);
-            });
-            weeksRenderContainer.appendChild(weekDiv);
+            dayLabel.style.fontSize = '10px';
+            gridContainer.appendChild(dayLabel);
         });
-        mainGraphRow.appendChild(weeksRenderContainer);
 
-        // Animate the contribution day flyers into view
-        // const animatedFlyers = weeksRenderContainer.querySelectorAll('.contrib-day-flyer');
-        // animatedFlyers.forEach((flyerDiv, index) => {
-        //     setTimeout(() => {
-        //         flyerDiv.style.opacity = '1';
-        //         flyerDiv.style.transform = 'translateX(0)';
-        //     }, index * 10); // Stagger the animation slightly
-        // });
+        // Add month labels (first row) - positioned at weeks containing 1st of month
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        
+        reversedWeeks.forEach((week, weekIndex) => {
+            // Check if this week contains the 1st of any month
+            const monthLabel = findMonthLabelForWeek(week, months);
+            
+            if (monthLabel) {
+                const monthDiv = document.createElement('div');
+                monthDiv.textContent = monthLabel;
+                monthDiv.style.gridColumn = `${weekIndex + 2}`;
+                monthDiv.style.gridRow = '1';
+                monthDiv.style.fontSize = '10px';
+                monthDiv.style.color = 'inherit';
+                monthDiv.style.textAlign = 'left';
+                monthDiv.style.whiteSpace = 'nowrap';
+                monthDiv.style.height = '15px';
+                monthDiv.style.lineHeight = '15px';
+                monthDiv.style.overflow = 'visible';
+                gridContainer.appendChild(monthDiv);
+            }
+        });
 
-        // Set up IntersectionObserver to animate flyers when visible
+        // Add contribution days to the grid
+        reversedWeeks.forEach((week, weekIndex) => {
+            addWeekToGrid(week, weekIndex, gridContainer);
+        });
+
+        // Set up intersection observer for entry animations
+        setupContributionAnimations(gridContainer);
+
+        // Add to layout
+        overallGraphLayout.appendChild(gridContainer);
+        container.appendChild(overallGraphLayout);
+
+        // Add total contributions summary
+        addTotalContributionsText(data.totalContributions, container);
+    }
+
+    /**
+     * Finds the month label for a week if it contains the 1st of any month
+     */
+    function findMonthLabelForWeek(week, months) {
+        if (!week.contributionDays || week.contributionDays.length === 0) return null;
+        
+        for (const day of week.contributionDays) {
+            const date = new Date(day.date);
+            if (date.getDate() === 1) {
+                return months[date.getMonth()];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Adds a week's worth of contribution days to the grid
+     */
+    function addWeekToGrid(week, weekIndex, gridContainer) {
+        const daysInWeek = Array(7).fill(null);
+        week.contributionDays.forEach(day => {
+            daysInWeek[day.weekday] = day;
+        });
+
+        daysInWeek.forEach((dayData, dayIndex) => {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'contrib-day';
+            dayDiv.style.gridColumn = `${weekIndex + 2}`;
+            dayDiv.style.gridRow = `${dayIndex + 2}`;
+            
+            if (dayData) {
+                addTooltipToDay(dayDiv, dayData);
+                
+                if (dayData.contributionCount > 0) {
+                    addAnimationToDay(dayDiv, dayData);
+                }
+            }
+            
+            addHoverEvents(dayDiv, gridContainer);
+            gridContainer.appendChild(dayDiv);
+        });
+    }
+
+    /**
+     * Adds tooltip to a contribution day
+     */
+    function addTooltipToDay(dayDiv, dayData) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'contrib-day-tooltip';
+        
+        const count = dayData.contributionCount;
+        const date = new Date(dayData.date);
+        const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        tooltip.textContent = `${count} contribution${count === 1 ? '' : 's'} on ${formattedDate}`;
+        
+        dayDiv.appendChild(tooltip);
+    }
+
+    /**
+     * Adds animation flyer to a contribution day with contributions
+     */
+    function addAnimationToDay(dayDiv, dayData) {
+        const orangeColor = contributionColors[dayData.color.toLowerCase()] || dayData.color;
+        
+        const flyerDiv = document.createElement('div');
+        flyerDiv.className = 'contrib-day-flyer';
+        flyerDiv.style.backgroundColor = orangeColor;
+        dayDiv.appendChild(flyerDiv);
+    }
+
+    /**
+     * Adds hover events for tooltip positioning
+     */
+    function addHoverEvents(dayDiv, gridContainer) {
+        dayDiv.addEventListener('mouseenter', () => {
+            const tooltip = dayDiv.querySelector('.contrib-day-tooltip');
+            if (!tooltip) return;
+            
+            tooltip.style.opacity = '1';
+            
+            // Position tooltip with overflow protection
+            setTimeout(() => {
+                positionTooltip(tooltip, dayDiv, gridContainer);
+            }, 0);
+        });
+        
+        dayDiv.addEventListener('mouseleave', () => {
+            const tooltip = dayDiv.querySelector('.contrib-day-tooltip');
+            if (tooltip) {
+                tooltip.style.opacity = '0';
+            }
+        });
+    }
+
+    /**
+     * Positions tooltip with overflow protection
+     */
+    function positionTooltip(tooltip, dayDiv, gridContainer) {
+        const dayRect = dayDiv.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        
+        // Position tooltip above the day element using viewport coordinates
+        const leftPos = dayRect.left + (dayRect.width / 2) - (tooltipRect.width / 2);
+        const topPos = dayRect.top - tooltipRect.height - 6; // 6px gap above the day
+        
+        // Check for horizontal overflow and adjust
+        const viewportWidth = window.innerWidth;
+        let adjustedLeftPos = leftPos;
+        
+        if (leftPos < 5) {
+            adjustedLeftPos = 5; // 5px margin from left edge
+        } else if (leftPos + tooltipRect.width > viewportWidth - 5) {
+            adjustedLeftPos = viewportWidth - tooltipRect.width - 5; // 5px margin from right edge
+        }
+        
+        tooltip.style.left = `${adjustedLeftPos}px`;
+        tooltip.style.top = `${topPos}px`;
+        tooltip.style.transform = 'none'; // Remove any existing transforms
+        tooltip.style.marginTop = '0'; // Remove any existing margins
+    }
+
+    /**
+     * Sets up intersection observer for contribution animations
+     */
+    function setupContributionAnimations(gridContainer) {
         const observer = new IntersectionObserver((entries, observerInstance) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    animateContributionFlyers(weeksRenderContainer);
-                    observerInstance.unobserve(entry.target); // Animate only once
+                    animateContributionFlyers(gridContainer);
+                    observerInstance.unobserve(entry.target);
                 }
             });
         }, {
-            threshold: 0.1, // Trigger when 10% of the element is visible
-            rootMargin: '0px 0px -50px 0px' // Adjust as needed
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         });
 
-        observer.observe(weeksRenderContainer);
-
-        weeksRenderContainer.addEventListener('scroll', () => {
-            monthLabelsScroller.scrollLeft = weeksRenderContainer.scrollLeft;
-        });
-
-        overallGraphLayout.appendChild(monthLabelsScroller);
-        overallGraphLayout.appendChild(mainGraphRow);
-        container.appendChild(overallGraphLayout);
-
-        const totalContributionsText = document.createElement('p');
-        totalContributionsText.textContent = `Total contributions in the last year: ${data.totalContributions}`;
-        totalContributionsText.className = 'github-total-contributions';
-        totalContributionsText.style.fontSize = '0.9em';
-        totalContributionsText.style.marginTop = '15px';
-        totalContributionsText.style.textAlign = 'right'; 
-        totalContributionsText.style.paddingRight = '10px';
-        container.appendChild(totalContributionsText);
+        observer.observe(gridContainer);
     }
 
+    /**
+     * Animates contribution flyers with staggered timing
+     */
     function animateContributionFlyers(containerElement) {
         const animatedFlyers = containerElement.querySelectorAll('.contrib-day-flyer');
         animatedFlyers.forEach((flyerDiv, index) => {
             setTimeout(() => {
                 flyerDiv.style.opacity = '1';
                 flyerDiv.style.transform = 'translateX(0)';
-            }, index * 10); // Stagger the animation slightly
+            }, index * 10);
         });
     }
 
+    /**
+     * Adds total contributions text below the graph
+     */
+    function addTotalContributionsText(totalContributions, container) {
+        const totalContributionsText = document.createElement('p');
+        totalContributionsText.textContent = `Total contributions in the last year: ${totalContributions}`;
+        totalContributionsText.className = 'github-total-contributions';
+        totalContributionsText.style.fontSize = '0.9em';
+        totalContributionsText.style.marginTop = '15px';
+        totalContributionsText.style.textAlign = 'right';
+        totalContributionsText.style.paddingRight = '10px';
+        container.appendChild(totalContributionsText);
+    }
+
+    // Initialize GitHub data fetching
     fetchGitHubData();
-}); 
+});
