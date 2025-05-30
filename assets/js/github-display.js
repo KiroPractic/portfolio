@@ -175,32 +175,81 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     /**
-     * Renders the README section with basic Markdown formatting
+     * Renders the README section using marked.js for proper Markdown parsing
      */
     function renderReadmeSection(readmeContent) {
         const readmeContainer = document.getElementById('github-readme-container');
         if (!readmeContainer || !readmeContent) return;
         
-        // Basic Markdown to HTML conversion
-        const formattedContent = readmeContent
-            .replace(/^# (.*$)/gm, '<h3>$1</h3>')
-            .replace(/^## (.*$)/gm, '<h4>$1</h4>')
-            .replace(/^### (.*$)/gm, '<h5>$1</h5>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            .replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>')
-            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-            .replace(/^\- (.*$)/gm, '<li>$1</li>')
-            .split(/\n\n+/).join('<br><br>');
-            
+        // Configure marked.js options
+        marked.setOptions({
+            breaks: true,
+            gfm: true,
+            highlight: function(code, lang) {
+                // Use Prism.js for syntax highlighting if available
+                if (window.Prism && lang && Prism.languages[lang]) {
+                    return Prism.highlight(code, Prism.languages[lang], lang);
+                }
+                return code;
+            }
+        });
+        
+        // Custom renderer for images to add classes
+        const renderer = new marked.Renderer();
+        
+        // Override code rendering to add proper classes for Prism.js
+        renderer.code = function(code, lang) {
+            const language = lang || 'text';
+            return `<pre><code class="language-${language}">${code}</code></pre>`;
+        };
+        
+        // Override image rendering to add classes for badges and regular images
+        renderer.image = function(href, title, text) {
+            // Check if it's a badge (shields.io or similar)
+            if (href.includes('shields.io') || href.includes('badge') || href.includes('img.shields.io')) {
+                return `<img src="${href}" alt="${text}" title="${title || ''}" class="github-badge">`;
+            }
+            // Regular images
+            return `<img src="${href}" alt="${text}" title="${title || ''}" class="github-image">`;
+        };
+        
+        // Override link rendering to handle badge links
+        renderer.link = function(href, title, text) {
+            // Check if the text contains an image (badge link)
+            if (text.includes('<img') && text.includes('github-badge')) {
+                return `<a href="${href}" target="_blank" rel="noopener noreferrer" title="${title || ''}">${text}</a>`;
+            }
+            // Regular links
+            return `<a href="${href}" target="_blank" rel="noopener noreferrer" title="${title || ''}">${text}</a>`;
+        };
+        
+        // Parse the markdown content
+        let htmlContent;
+        try {
+            htmlContent = marked.parse(readmeContent, { renderer: renderer });
+        } catch (error) {
+            console.error('Error parsing markdown:', error);
+            htmlContent = '<p>Error parsing README content.</p>';
+        }
+        
+        // Post-process to wrap badge groups
+        htmlContent = htmlContent.replace(
+            /<p>(\s*(?:<a[^>]*><img[^>]*class="github-badge"[^>]*><\/a>\s*)+)<\/p>/g,
+            '<div class="github-badges-container"><div class="badges-row">$1</div></div>'
+        );
+        
         readmeContainer.innerHTML = `
-            <div class="github-readme">
-                <h4 class="github-readme-title">README.md</h4>
-                <div class="github-readme-content">
-                    ${formattedContent}
-                </div>
+            <div class="github-readme-content">
+                ${htmlContent}
             </div>
         `;
+        
+        // Trigger Prism.js highlighting after content is rendered
+        if (window.Prism) {
+            setTimeout(() => {
+                Prism.highlightAllUnder(readmeContainer);
+            }, 100);
+        }
     }
 
     /**
